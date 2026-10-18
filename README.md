@@ -32,6 +32,20 @@ Modo Escritorio.
 - Para añadir otra dependencia: una entrada en `DEPS` de `py_modules/ktb_deps.py` y otra en `DEPS` de
   `src/DepsSection.tsx`.
 
+### Mapeos de mando (Steam Input)
+- Busca archivos `.vdf` de Steam Input en tu carpeta personal (Descargas, Documentos…) y en la tarjeta SD, por
+  ejemplo los que bajas de [steaminputdb.com](https://www.steaminputdb.com) con **Download .vdf**.
+- **Aplicar a este juego**: lo instala como plantilla y abre la configuración del mando del juego elegido. Ahí,
+  **Explorar configuraciones → Plantillas** y eliges ese nombre. Sirve también para juegos añadidos como «no Steam».
+- **Instalar como plantilla**: lo deja disponible en las plantillas de todos los juegos.
+- **ID de SteamInputDB**: el número de `steaminputdb.com/config/NÚMERO`. Steam descarga ese mapeo y te deja
+  aplicarlo al juego elegido, sin bajar ningún archivo.
+- Las plantillas se guardan en `~/.local/share/Steam/controller_base/templates` con una copia en `~/mapeos-steam`.
+  Si una actualización de Steam las borra, el plugin las vuelve a poner al arrancar.
+- Quitar plantilla: borra la plantilla y su copia. Solo toca las que instaló el Toolbox (`konkr_*.vdf`).
+- Sin probar todavía en una Konkr real. Si un mapeo es de otro tipo de mando, Steam suele adaptarlo, pero revísalo
+  en *Editar mapeo*.
+
 ### SSH / SFTP
 - Interruptor para activar o desactivar el servidor SSH (`systemctl enable/disable --now sshd`).
   Activado, sigue encendido tras reiniciar y en Modo Juego.
@@ -92,6 +106,10 @@ Decky plugin for the KONKR Pocket FIT on SteamOS ARM, with tools in the Quick Ac
   changes are applied the next time it starts. Requires Konkr Tweaks 0.3.0+.
 - **Dependencies**: installs what a game needs into its Proton prefix, using that game's own Proton. For now the
   Microsoft Visual C++ 2015-2022 redistributable (x64, x86 or arm64). Untested on real hardware yet.
+- **Controller layouts**: finds Steam Input `.vdf` files (home folder and SD card, e.g. downloaded from
+  steaminputdb.com) and applies them to a game, including non-Steam ones, by installing them as Steam templates and
+  opening that game's controller settings. Can also apply a SteamInputDB ID directly. Templates are backed up to
+  `~/mapeos-steam` and restored if a Steam update wipes them. Untested on real hardware yet.
 - **SSH / SFTP**: toggle the SSH server (persistent across reboots and in Game Mode) and see status, IP
   addresses, Wi-Fi, port, user, hostname and a ready-to-use `sftp://` address. Warns if your user has no password.
 

@@ -4,6 +4,7 @@ import { FaToolbox } from "react-icons/fa";
 import { Collapsible } from "./Collapsible";
 import { TweaksSection } from "./TweaksSection";
 import { DepsSection } from "./DepsSection";
+import { MapsSection } from "./MapsSection";
 import { SshSection } from "./SshSection";
 import { t } from "./i18n";
 
@@ -17,6 +18,9 @@ function Content() {
       </Collapsible>
       <Collapsible id="deps" title={t.depsTitle}>
         <DepsSection />
+      </Collapsible>
+      <Collapsible id="maps" title={t.mapsTitle}>
+        <MapsSection />
       </Collapsible>
       <Collapsible id="ssh" title={t.sshTitle}>
         <SshSection />

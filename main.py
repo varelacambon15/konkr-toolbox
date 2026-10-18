@@ -94,6 +94,19 @@ async def _deps(*args, timeout=60):
     return data
 
 
+# ------------------------------------------------------------------ Mapeos de mando
+
+async def _maps(*args, timeout=60):
+    script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "py_modules", "ktb_maps.py")
+    rc, out, err = await _run([PY, script, *args], timeout=timeout, as_user=True)
+    line = out.splitlines()[-1] if out else ""
+    try:
+        return json.loads(line)
+    except ValueError:
+        decky.logger.error(f"maps {args}: rc={rc} out={out[-300:]} err={err[-500:]}")
+        return {"ok": False, "error": err[-200:] or out[-200:] or f"rc={rc}"}
+
+
 # ------------------------------------------------------------------ SSH
 
 async def _systemctl(*args):
@@ -173,6 +186,16 @@ class Plugin:
     async def deps_install(self, appid, dep, variant):
         return await _deps("install", str(int(appid)), str(dep), str(variant), timeout=500)
 
+    # ---------- Mapeos de mando
+    async def maps_list(self):
+        return await _maps("list", timeout=90)
+
+    async def maps_install(self, path):
+        return await _maps("install", str(path))
+
+    async def maps_remove(self, name):
+        return await _maps("remove", str(name))
+
     # ---------- SSH
     async def ssh_status(self):
         rc_a, active = await _systemctl("is-active")
@@ -204,6 +227,10 @@ class Plugin:
     # ---------- ciclo de vida
     async def _main(self):
         decky.logger.info(f"Konkr Toolbox listo (usuario {_user()}, home {_home()})")
+        # Si una actualización de Steam borró las plantillas de mando, se vuelven a poner
+        r = await _maps("restore")
+        if r.get("restored"):
+            decky.logger.info(f"plantillas de mando restauradas: {r['restored']}")
 
     async def _unload(self):
         pass
