@@ -3,6 +3,7 @@ import { callable, toaster } from "@decky/api";
 import { useEffect, useState } from "react";
 import { t } from "./i18n";
 import { ensureWrapper } from "./steam";
+import { LaunchOptions } from "./LaunchOptions";
 
 const MODES = ["max", "perf", "balanced", "quality", "battery"];
 
@@ -214,6 +215,7 @@ export function TweaksSection() {
               </ButtonItem>
             </PanelSectionRow>
           )}
+          <LaunchOptions appid={game.appid} wrapped={game.wrapped} onChanged={() => load(game.appid)} />
         </>
       )}
     </PanelSection>

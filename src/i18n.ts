@@ -20,6 +20,11 @@ const es = {
   mode: "Modo",
   apply: "Aplicar modo",
   restore: "Restaurar original",
+  optsTitle: "Opciones de lanzamiento",
+  optsDesc: "Se aplican la próxima vez que abras el juego. Prueba de una en una: lo que va bien en un juego puede ir mal en otro.",
+  optsSaved: "Guardado. Se aplica al abrir el juego.",
+  optsOld: "Para las opciones de lanzamiento hace falta Konkr Tweaks 0.4.0 o posterior.",
+  optsUnavailable: "No disponible en este equipo.",
   applied: "Modo aplicado",
   appliedNext: "Se aplicará la próxima vez que abras el juego.",
   restored: "Juego restaurado",
@@ -132,6 +137,11 @@ const en: Strings = {
   mode: "Mode",
   apply: "Apply mode",
   restore: "Restore original",
+  optsTitle: "Launch options",
+  optsDesc: "They apply the next time you start the game. Try one at a time: what helps one game may hurt another.",
+  optsSaved: "Saved. Applies when you start the game.",
+  optsOld: "Launch options need Konkr Tweaks 0.4.0 or newer.",
+  optsUnavailable: "Not available on this device.",
   applied: "Mode applied",
   appliedNext: "It will be applied next time you start the game.",
   restored: "Game restored",
@@ -222,4 +232,5 @@ const en: Strings = {
 };
 
 const lang = (typeof navigator !== "undefined" && navigator.language) || "en";
-export const t: Strings = lang.toLowerCase().startsWith("es") ? es : en;
+export const langCode = lang.toLowerCase().startsWith("es") ? "es" : "en";
+export const t: Strings = langCode === "es" ? es : en;

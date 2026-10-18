@@ -5,7 +5,7 @@
   "flags": [
     "root"
   ],
-  "version": "0.4.0",
+  "version": "0.5.0",
   "publish": {
     "tags": [
       "konkr",
@@ -15,7 +15,7 @@
       "steam-input",
       "root"
     ],
-    "description": "Herramientas para la KONKR Pocket FIT con SteamOS ARM: modos de Konkr Tweaks por juego, dependencias, mapeos de mando y opciones de SSH.",
+    "description": "Herramientas para la KONKR Pocket FIT con SteamOS ARM: modos y opciones de lanzamiento de Konkr Tweaks por juego, dependencias, mapeos de mando y opciones de SSH.",
     "image": "https://opengraph.githubassets.com/1/varelacambon15/konkr-toolbox"
   }
 }

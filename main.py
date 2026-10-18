@@ -179,6 +179,12 @@ class Plugin:
     async def kt_restore(self, appid):
         return await _kt("json-restore", str(int(appid)), timeout=120)
 
+    async def kt_opts(self, appid, lang="es"):
+        return await _kt("json-opts", str(int(appid)), "--lang", str(lang)[:5])
+
+    async def kt_set_opt(self, appid, key, value, lang="es"):
+        return await _kt("json-set-opt", str(int(appid)), str(key), str(value), "--lang", str(lang)[:5])
+
     # ---------- Dependencias
     async def deps_games(self):
         return await _deps("games")

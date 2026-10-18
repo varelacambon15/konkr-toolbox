@@ -14,6 +14,10 @@ botón: solo se abre (y carga) cuando la tocas.
 - Muestra si tiene perfil propio y qué modo tiene puesto.
 - Aplica uno de los cinco modos: **Máximo rendimiento, Rendimiento, Equilibrado, Calidad, Batería**.
 - **Restaurar original** deja los archivos del juego como estaban.
+- **Opciones de lanzamiento** (botón dentro de la sección): interruptores por juego para quitar el vsync del juego,
+  usar solo los núcleos rápidos, caché de shaders grande, menos retraso de los controles, forzar DX11/DX12/Vulkan,
+  sincronización compatible, arreglo de cierres aleatorios, WineD3D, DLL de mods, MangoHud, registros… Se aplican
+  la próxima vez que abras el juego. Necesita Konkr Tweaks 0.4.0 o posterior.
 - Si el juego no tiene el lanzador `kt-run` en sus opciones de lanzamiento, lo añade sin cerrar Steam.
 - Con el juego abierto, los cambios gráficos quedan pendientes y se aplican al volver a abrirlo
   (si se tocaran con el juego abierto, el juego los sobrescribiría al cerrarse).
@@ -103,7 +107,10 @@ Decky plugin for the KONKR Pocket FIT on SteamOS ARM, with tools in the Quick Ac
 - **Konkr Tweaks**: pick a game (the running one first), see its profile and mode, apply one of five modes
   (Maximum performance, Performance, Balanced, Quality, Battery) or restore the original files. Adds the
   `kt-run` launcher to the game's launch options without closing Steam. If the game is running, graphics
-  changes are applied the next time it starts. Requires Konkr Tweaks 0.3.0+.
+  changes are applied the next time it starts. A **Launch options** button holds per-game toggles (game vsync off,
+  fast cores only, large shader cache, lower input lag, force DX11/DX12/Vulkan, compatible sync, random crash fix,
+  WineD3D, mod DLLs, MangoHud, logs…), applied on the next launch. Requires Konkr Tweaks 0.3.0+ (0.4.0+ for
+  launch options).
 - **Dependencies**: installs what a game needs into its Proton prefix, using that game's own Proton. For now the
   Microsoft Visual C++ 2015-2022 redistributable (x64, x86 or arm64). Untested on real hardware yet.
 - **Controller layouts**: finds Steam Input `.vdf` files (home folder and SD card, e.g. downloaded from
