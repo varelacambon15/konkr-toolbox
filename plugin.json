@@ -1,0 +1,20 @@
+{
+  "name": "Konkr Toolbox",
+  "author": "Alejandro (varelacambon15)",
+  "api_version": 1,
+  "flags": [
+    "root"
+  ],
+  "version": "0.1.0",
+  "publish": {
+    "tags": [
+      "konkr",
+      "steamos-arm",
+      "performance",
+      "ssh",
+      "root"
+    ],
+    "description": "Herramientas para la KONKR Pocket FIT con SteamOS ARM: modos de Konkr Tweaks por juego y opciones de SSH.",
+    "image": "https://opengraph.githubassets.com/1/varelacambon15/konkr-toolbox"
+  }
+}
