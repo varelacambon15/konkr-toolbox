@@ -1,6 +1,6 @@
 """Konkr Toolbox: backend del plugin de Decky.
 
-Corre como root (flag "_root" en plugin.json) porque activar o desactivar SSH lo necesita.
+Corre como root (flag "root" en plugin.json; "_root" lo desactiva) porque activar o desactivar SSH lo necesita.
 Konkr Tweaks, en cambio, se ejecuta siempre como el usuario normal (runuser), para que sus
 ajustes y los archivos de los juegos sigan siendo suyos.
 """
