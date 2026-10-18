@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
-"""Instala Microsoft Visual C++ 2015-2022 (arm64, x64 o x86) en el prefijo de Proton de un juego.
+"""Instala dependencias de Windows (por ahora Visual C++ 2015-2022) en el prefijo de Proton de un juego.
 
 Se ejecuta siempre como el usuario normal (no como root), para que el prefijo siga siendo suyo.
 Salida: una línea JSON.
 
-  ktb_vcredist.py games                       juegos con prefijo y el Proton que usan
-  ktb_vcredist.py install APPID ARCH          descarga (si hace falta) e instala; ARCH = arm64|x64|x86
+  ktb_deps.py games                          juegos con prefijo y el Proton que usan
+  ktb_deps.py install APPID DEP VARIANTE     descarga (si hace falta) e instala. DEP = vcredist; VARIANTE = arm64|x64|x86
+
+Para añadir una dependencia nueva: una entrada en DEPS (url por variante, nombre del archivo y argumentos
+silenciosos) y su código de salida «correcto» en OK_CODES si no es el 0.
 """
 import json
 import os
@@ -19,11 +22,17 @@ import urllib.request
 
 HOME = os.path.expanduser("~")
 CACHE = os.path.join(HOME, ".cache", "konkr-toolbox")
-LOG = os.path.join(CACHE, "vcredist.log")
-URLS = {
-    "arm64": "https://aka.ms/vs/17/release/vc_redist.arm64.exe",
-    "x64": "https://aka.ms/vs/17/release/vc_redist.x64.exe",
-    "x86": "https://aka.ms/vs/17/release/vc_redist.x86.exe",
+LOG = os.path.join(CACHE, "deps.log")
+DEPS = {
+    "vcredist": {
+        "urls": {
+            "arm64": "https://aka.ms/vs/17/release/vc_redist.arm64.exe",
+            "x64": "https://aka.ms/vs/17/release/vc_redist.x64.exe",
+            "x86": "https://aka.ms/vs/17/release/vc_redist.x86.exe",
+        },
+        "file": "vc_redist.{v}.exe",
+        "args": ["/install", "/quiet", "/norestart"],
+    },
 }
 # Códigos de salida del instalador de Microsoft que significan «correcto»
 # (el sistema operativo solo conserva el último byte del código: 1638 → 102, 3010 → 194)
@@ -237,18 +246,20 @@ def find_proton(root, appid):
     return None, name
 
 
-def download(arch):
+def download(dep, variant):
+    spec = DEPS[dep]
+    fname = spec["file"].format(v=variant)
     os.makedirs(CACHE, exist_ok=True)
-    dst = os.path.join(CACHE, f"vc_redist.{arch}.exe")
+    dst = os.path.join(CACHE, fname)
     if os.path.isfile(dst) and os.path.getsize(dst) > 1_000_000 and open(dst, "rb").read(2) == b"MZ":
         return dst
     # también vale uno que ya hayas descargado a mano
     for d in ("Downloads", "Descargas"):
-        p = os.path.join(HOME, d, f"vc_redist.{arch}.exe")
+        p = os.path.join(HOME, d, fname)
         if os.path.isfile(p) and os.path.getsize(p) > 1_000_000 and open(p, "rb").read(2) == b"MZ":
             return p
     tmp = dst + ".part"
-    req = urllib.request.Request(URLS[arch], headers={"User-Agent": "konkr-toolbox"})
+    req = urllib.request.Request(spec["urls"][variant], headers={"User-Agent": "konkr-toolbox"})
     with urllib.request.urlopen(req, timeout=60) as r, open(tmp, "wb") as f:
         while True:
             chunk = r.read(1 << 16)
@@ -264,7 +275,7 @@ def download(arch):
     return dst
 
 
-def install(appid, arch):
+def install(appid, dep, variant):
     root = steam_root()
     if not root:
         return out({"ok": False, "error": "no-steam"}, 1)
@@ -277,14 +288,14 @@ def install(appid, arch):
     if not proton:
         return out({"ok": False, "error": "no-proton"}, 1)
     try:
-        exe = download(arch)
+        exe = download(dep, variant)
     except Exception as e:  # noqa
         return out({"ok": False, "error": "download", "detail": str(e)[:200]}, 1)
     env = dict(os.environ)
     env.update({"STEAM_COMPAT_DATA_PATH": g["prefix"], "STEAM_COMPAT_CLIENT_INSTALL_PATH": root,
                 "SteamAppId": str(appid), "SteamGameId": str(appid), "WINEDEBUG": "-all"})
     env.setdefault("DISPLAY", ":0")
-    cmd = [os.path.join(proton, "proton"), "run", exe, "/install", "/quiet", "/norestart"]
+    cmd = [os.path.join(proton, "proton"), "run", exe] + DEPS[dep]["args"]
     os.makedirs(CACHE, exist_ok=True)
     t0 = time.time()
     try:
@@ -321,8 +332,8 @@ def main(argv):
                 _p, pname = find_proton(root, g["appid"])
                 lst.append({"appid": g["appid"], "name": g["name"], "proton": pname})
             return out({"ok": True, "games": lst})
-        if cmd == "install" and len(argv) >= 3 and argv[2] in URLS:
-            return install(int(argv[1]), argv[2])
+        if cmd == "install" and len(argv) >= 4 and argv[2] in DEPS and argv[3] in DEPS[argv[2]]["urls"]:
+            return install(int(argv[1]), argv[2], argv[3])
         return out({"ok": False, "error": "bad-command"}, 1)
     except Exception as e:  # noqa — el plugin necesita siempre una respuesta JSON
         return out({"ok": False, "error": f"{type(e).__name__}: {e}"}, 1)

@@ -78,19 +78,19 @@ async def _kt(*args, timeout=60):
     return data
 
 
-# ------------------------------------------------------------------ Visual C++
+# ------------------------------------------------------------------ Dependencias
 
-async def _vc(*args, timeout=60):
-    script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "py_modules", "ktb_vcredist.py")
+async def _deps(*args, timeout=60):
+    script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "py_modules", "ktb_deps.py")
     rc, out, err = await _run([PY, script, *args], timeout=timeout, as_user=True)
     line = out.splitlines()[-1] if out else ""
     try:
         data = json.loads(line)
     except ValueError:
-        decky.logger.error(f"vcredist {args}: rc={rc} out={out[-300:]} err={err[-500:]}")
+        decky.logger.error(f"deps {args}: rc={rc} out={out[-300:]} err={err[-500:]}")
         return {"ok": False, "error": err[-200:] or out[-200:] or f"rc={rc}"}
     if not data.get("ok"):
-        decky.logger.warning(f"vcredist {args}: {data}")
+        decky.logger.warning(f"deps {args}: {data}")
     return data
 
 
@@ -166,12 +166,12 @@ class Plugin:
     async def kt_restore(self, appid):
         return await _kt("json-restore", str(int(appid)), timeout=120)
 
-    # ---------- Visual C++
-    async def vc_games(self):
-        return await _vc("games")
+    # ---------- Dependencias
+    async def deps_games(self):
+        return await _deps("games")
 
-    async def vc_install(self, appid, arch):
-        return await _vc("install", str(int(appid)), str(arch), timeout=500)
+    async def deps_install(self, appid, dep, variant):
+        return await _deps("install", str(int(appid)), str(dep), str(variant), timeout=500)
 
     # ---------- SSH
     async def ssh_status(self):

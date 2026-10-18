@@ -43,7 +43,7 @@ export function SshSection() {
 
   if (!st) {
     return (
-      <PanelSection title={t.sshTitle}>
+      <PanelSection>
         <PanelSectionRow>
           <Field label={t.loading} />
         </PanelSectionRow>
@@ -53,7 +53,7 @@ export function SshSection() {
 
   if (!st.installed) {
     return (
-      <PanelSection title={t.sshTitle}>
+      <PanelSection>
         <PanelSectionRow>
           <Field description={t.sshMissing} />
         </PanelSectionRow>
@@ -65,7 +65,7 @@ export function SshSection() {
   const port = st.port.split(",")[0].trim();
 
   return (
-    <PanelSection title={t.sshTitle}>
+    <PanelSection>
       <PanelSectionRow>
         <ToggleField
           label={t.sshEnabled}

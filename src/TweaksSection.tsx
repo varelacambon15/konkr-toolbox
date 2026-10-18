@@ -118,7 +118,7 @@ export function TweaksSection() {
 
   if (games === null) {
     return (
-      <PanelSection title={t.ktTitle}>
+      <PanelSection>
         <PanelSectionRow>
           <Field label={t.loading} />
         </PanelSectionRow>
@@ -128,7 +128,7 @@ export function TweaksSection() {
 
   if (error) {
     return (
-      <PanelSection title={t.ktTitle}>
+      <PanelSection>
         <PanelSectionRow>
           <Field description={error} />
         </PanelSectionRow>
@@ -143,7 +143,7 @@ export function TweaksSection() {
 
   if (!games.length) {
     return (
-      <PanelSection title={t.ktTitle}>
+      <PanelSection>
         <PanelSectionRow>
           <Field description={t.noGames} />
         </PanelSectionRow>
@@ -152,7 +152,7 @@ export function TweaksSection() {
   }
 
   return (
-    <PanelSection title={t.ktTitle}>
+    <PanelSection>
       <PanelSectionRow>
         <DropdownItem
           label={t.game}

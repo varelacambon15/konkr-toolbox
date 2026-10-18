@@ -2,7 +2,8 @@
 
 Plugin de [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) para la **KONKR Pocket FIT** con
 [SteamOS ARM](https://github.com/hashtagbasit/SteamOS-ARM-Port). Reúne herramientas para la consola en el menú
-de acceso rápido (botón `···`), sin salir del Modo Juego.
+de acceso rápido (botón `···`), sin salir del Modo Juego. Cada herramienta es una sección cerrada detrás de un
+botón: solo se abre (y carga) cuando la tocas.
 
 *English below.*
 
@@ -20,14 +21,16 @@ de acceso rápido (botón `···`), sin salir del Modo Juego.
 Necesita **Konkr Tweaks 0.3.0 o posterior** instalado en
 Modo Escritorio.
 
-### Visual C++
-- Para cuando un programa dice *«The following component(s) are required to run this program: Microsoft Visual C++
-  2015-2022 Redistributable (arm64)»*.
-- Eliges el juego (los de Steam y también los añadidos como «no Steam», siempre que ya tengan prefijo de Proton) y la versión: **arm64** (programas ARM), **x64** o **x86**.
-- Descarga el instalador oficial de Microsoft (o usa el `vc_redist.<arq>.exe` que ya tengas en `~/Downloads`) y lo
-  ejecuta en silencio con el mismo Proton que usa ese juego, dentro de su prefijo.
-- Registro: `~/.cache/konkr-toolbox/vcredist.log`.
+### Dependencias
+- Para cuando un programa dice *«The following component(s) are required to run this program…»*.
+- Eliges el juego (de Steam o añadido como «no Steam», siempre que ya tenga prefijo de Proton) y qué instalar.
+- Ahora mismo: **Microsoft Visual C++ 2015-2022**, en versión **x64** (juegos de PC de 64 bits), **x86** (32 bits) o
+  **arm64** (programas ARM). Descarga el instalador oficial de Microsoft (o usa el `vc_redist.<arq>.exe` que ya
+  tengas en `~/Downloads`) y lo ejecuta en silencio con el mismo Proton que usa ese juego, dentro de su prefijo.
+- Registro: `~/.cache/konkr-toolbox/deps.log`.
 - Sin probar todavía en una Konkr real: si falla, el registro dice por qué.
+- Para añadir otra dependencia: una entrada en `DEPS` de `py_modules/ktb_deps.py` y otra en `DEPS` de
+  `src/DepsSection.tsx`.
 
 ### SSH / SFTP
 - Interruptor para activar o desactivar el servidor SSH (`systemctl enable/disable --now sshd`).
@@ -87,8 +90,8 @@ Decky plugin for the KONKR Pocket FIT on SteamOS ARM, with tools in the Quick Ac
   (Maximum performance, Performance, Balanced, Quality, Battery) or restore the original files. Adds the
   `kt-run` launcher to the game's launch options without closing Steam. If the game is running, graphics
   changes are applied the next time it starts. Requires Konkr Tweaks 0.3.0+.
-- **Visual C++**: installs the Microsoft Visual C++ 2015-2022 redistributable (arm64, x64 or x86) into a game's
-  Proton prefix, using that game's own Proton. Untested on real hardware yet.
+- **Dependencies**: installs what a game needs into its Proton prefix, using that game's own Proton. For now the
+  Microsoft Visual C++ 2015-2022 redistributable (x64, x86 or arm64). Untested on real hardware yet.
 - **SSH / SFTP**: toggle the SSH server (persistent across reboots and in Game Mode) and see status, IP
   addresses, Wi-Fi, port, user, hostname and a ready-to-use `sftp://` address. Warns if your user has no password.
 
