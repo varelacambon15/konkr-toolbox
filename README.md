@@ -23,7 +23,7 @@ Modo Escritorio.
 ### Visual C++
 - Para cuando un programa dice *«The following component(s) are required to run this program: Microsoft Visual C++
   2015-2022 Redistributable (arm64)»*.
-- Eliges el juego (los que ya tienen prefijo de Proton) y la versión: **arm64** (programas ARM), **x64** o **x86**.
+- Eliges el juego (los de Steam y también los añadidos como «no Steam», siempre que ya tengan prefijo de Proton) y la versión: **arm64** (programas ARM), **x64** o **x86**.
 - Descarga el instalador oficial de Microsoft (o usa el `vc_redist.<arq>.exe` que ya tengas en `~/Downloads`) y lo
   ejecuta en silencio con el mismo Proton que usa ese juego, dentro de su prefijo.
 - Registro: `~/.cache/konkr-toolbox/vcredist.log`.

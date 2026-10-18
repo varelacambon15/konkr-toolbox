@@ -10,9 +10,11 @@ Salida: una línea JSON.
 import json
 import os
 import re
+import struct
 import subprocess
 import sys
 import time
+import zlib
 import urllib.request
 
 HOME = os.path.expanduser("~")
@@ -54,6 +56,73 @@ def libraries(root):
     return libs
 
 
+def shortcuts(root):
+    """Juegos añadidos a Steam como «no Steam» (userdata/*/config/shortcuts.vdf, VDF binario)."""
+    res = {}
+    try:
+        users = os.listdir(os.path.join(root, "userdata"))
+    except OSError:
+        return res
+    for u in users:
+        path = os.path.join(root, "userdata", u, "config", "shortcuts.vdf")
+        try:
+            data = open(path, "rb").read()
+        except OSError:
+            continue
+        for e in _parse_shortcuts(data):
+            name, exe = e.get("appname") or e.get("name") or "", e.get("exe") or ""
+            appid = e.get("appid")
+            if appid is None:
+                appid = zlib.crc32((exe + name).encode("utf-8")) | 0x80000000
+            appid &= 0xFFFFFFFF
+            if name:
+                res[appid] = name
+    return res
+
+
+def _parse_shortcuts(data):
+    """Lee las entradas de un shortcuts.vdf. -> lista de {clave en minúsculas: valor}."""
+    entries, i, n = [], 0, len(data)
+
+    def cstr():
+        nonlocal i
+        j = data.find(b"\0", i)
+        if j < 0:
+            j = n
+        v = data[i:j].decode("utf-8", "replace")
+        i = j + 1
+        return v
+
+    def read_map():
+        nonlocal i
+        out = {}
+        while i < n:
+            t = data[i]
+            i += 1
+            if t == 8:
+                return out
+            key = cstr().lower()
+            if t == 0:
+                out[key] = read_map()
+            elif t == 1:
+                out[key] = cstr()
+            elif t == 2:
+                out[key] = struct.unpack_from("<I", data, i)[0]
+                i += 4
+            else:
+                return out
+        return out
+
+    try:
+        top = read_map()
+    except (struct.error, IndexError):
+        return entries
+    block = top.get("shortcuts", top)
+    if isinstance(block, dict):
+        entries = [v for v in block.values() if isinstance(v, dict)]
+    return entries
+
+
 def games(root):
     found = {}
     for lib in libraries(root):
@@ -82,6 +151,16 @@ def games(root):
                     prefix = c
                     break
             found[appid] = {"appid": appid, "name": name, "prefix": prefix, "library": lib}
+    for appid, name in shortcuts(root).items():
+        if appid in found:
+            continue
+        prefix = None
+        for lib in libraries(root):
+            c = os.path.join(lib, "steamapps", "compatdata", str(appid))
+            if os.path.isdir(os.path.join(c, "pfx")):
+                prefix = c
+                break
+        found[appid] = {"appid": appid, "name": name + "  (no Steam)", "prefix": prefix, "library": root}
     return sorted(found.values(), key=lambda g: g["name"].lower())
 
 
