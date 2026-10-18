@@ -20,6 +20,15 @@ de acceso rápido (botón `···`), sin salir del Modo Juego.
 Necesita **Konkr Tweaks 0.3.0 o posterior** instalado en
 Modo Escritorio.
 
+### Visual C++
+- Para cuando un programa dice *«The following component(s) are required to run this program: Microsoft Visual C++
+  2015-2022 Redistributable (arm64)»*.
+- Eliges el juego (los que ya tienen prefijo de Proton) y la versión: **arm64** (programas ARM), **x64** o **x86**.
+- Descarga el instalador oficial de Microsoft (o usa el `vc_redist.<arq>.exe` que ya tengas en `~/Downloads`) y lo
+  ejecuta en silencio con el mismo Proton que usa ese juego, dentro de su prefijo.
+- Registro: `~/.cache/konkr-toolbox/vcredist.log`.
+- Sin probar todavía en una Konkr real: si falla, el registro dice por qué.
+
 ### SSH / SFTP
 - Interruptor para activar o desactivar el servidor SSH (`systemctl enable/disable --now sshd`).
   Activado, sigue encendido tras reiniciar y en Modo Juego.
@@ -78,6 +87,8 @@ Decky plugin for the KONKR Pocket FIT on SteamOS ARM, with tools in the Quick Ac
   (Maximum performance, Performance, Balanced, Quality, Battery) or restore the original files. Adds the
   `kt-run` launcher to the game's launch options without closing Steam. If the game is running, graphics
   changes are applied the next time it starts. Requires Konkr Tweaks 0.3.0+.
+- **Visual C++**: installs the Microsoft Visual C++ 2015-2022 redistributable (arm64, x64 or x86) into a game's
+  Proton prefix, using that game's own Proton. Untested on real hardware yet.
 - **SSH / SFTP**: toggle the SSH server (persistent across reboots and in Game Mode) and see status, IP
   addresses, Wi-Fi, port, user, hostname and a ready-to-use `sftp://` address. Warns if your user has no password.
 

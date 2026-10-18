@@ -1,6 +1,6 @@
 """Konkr Toolbox: backend del plugin de Decky.
 
-Corre como root (flag "_root" en plugin.json) porque activar o desactivar SSH lo necesita.
+Corre como root (flag "root" en plugin.json) porque activar o desactivar SSH lo necesita.
 Konkr Tweaks, en cambio, se ejecuta siempre como el usuario normal (runuser), para que sus
 ajustes y los archivos de los juegos sigan siendo suyos.
 """
@@ -78,6 +78,22 @@ async def _kt(*args, timeout=60):
     return data
 
 
+# ------------------------------------------------------------------ Visual C++
+
+async def _vc(*args, timeout=60):
+    script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "py_modules", "ktb_vcredist.py")
+    rc, out, err = await _run([PY, script, *args], timeout=timeout, as_user=True)
+    line = out.splitlines()[-1] if out else ""
+    try:
+        data = json.loads(line)
+    except ValueError:
+        decky.logger.error(f"vcredist {args}: rc={rc} out={out[-300:]} err={err[-500:]}")
+        return {"ok": False, "error": err[-200:] or out[-200:] or f"rc={rc}"}
+    if not data.get("ok"):
+        decky.logger.warning(f"vcredist {args}: {data}")
+    return data
+
+
 # ------------------------------------------------------------------ SSH
 
 async def _systemctl(*args):
@@ -149,6 +165,13 @@ class Plugin:
 
     async def kt_restore(self, appid):
         return await _kt("json-restore", str(int(appid)), timeout=120)
+
+    # ---------- Visual C++
+    async def vc_games(self):
+        return await _vc("games")
+
+    async def vc_install(self, appid, arch):
+        return await _vc("install", str(int(appid)), str(arch), timeout=500)
 
     # ---------- SSH
     async def ssh_status(self):

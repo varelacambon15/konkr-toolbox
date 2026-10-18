@@ -3,12 +3,14 @@ import { staticClasses } from "@decky/ui";
 import { FaToolbox } from "react-icons/fa";
 import { TweaksSection } from "./TweaksSection";
 import { SshSection } from "./SshSection";
+import { VcSection } from "./VcSection";
 
 // Cada herramienta es una sección. Para añadir otra: crea su componente y ponlo aquí.
 function Content() {
   return (
     <>
       <TweaksSection />
+      <VcSection />
       <SshSection />
     </>
   );

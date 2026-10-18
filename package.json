@@ -1,6 +1,6 @@
 {
   "name": "konkr-toolbox",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Decky plugin for the KONKR Pocket FIT on SteamOS ARM: Konkr Tweaks game modes and SSH options in the Quick Access Menu",
   "type": "module",
   "scripts": {
