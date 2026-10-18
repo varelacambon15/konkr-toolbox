@@ -1,0 +1,1 @@
+ZIP de prueba de Konkr Toolbox 0.1.0 (compilado desde main 9bc5156). Se borrará al publicar v0.1.0.
