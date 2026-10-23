@@ -33,6 +33,13 @@ const ktRestore = callable<[appid: number], KtResult>("kt_restore");
 
 // El juego elegido se recuerda mientras Steam siga abierto
 let lastAppid: number | null = null;
+// El modo elegido en el desplegable (aún sin aplicar), por juego. Se guarda fuera del
+// componente porque el panel se vuelve a montar al cerrar un desplegable.
+const chosenMode: Record<number, string> = {};
+
+function modeFor(g: Game | undefined): string {
+  return (g && chosenMode[g.appid]) ?? g?.mode ?? "balanced";
+}
 
 function runningAppid(): number | null {
   try {
@@ -73,7 +80,7 @@ export function TweaksSection() {
       (list[0]?.appid ?? null);
     setAppid(pick);
     const g = list.find((x) => x.appid === pick);
-    if (g) setMode(g.mode ?? "balanced");
+    if (g) setMode(modeFor(g));
   };
 
   useEffect(() => {
@@ -110,6 +117,7 @@ export function TweaksSection() {
     setBusy(true);
     try {
       const r = await ktRestore(game.appid);
+      if (r.ok) delete chosenMode[game.appid];
       toaster.toast({ title: t.ktTitle, body: r.ok ? `${t.restored}: ${game.name}` : errorText(r.error) });
       await load(game.appid);
     } finally {
@@ -169,7 +177,7 @@ export function TweaksSection() {
             lastAppid = id;
             setAppid(id);
             const g = games.find((x) => x.appid === id);
-            setMode(g?.mode ?? "balanced");
+            setMode(modeFor(g));
           }}
         />
       </PanelSectionRow>
@@ -195,7 +203,11 @@ export function TweaksSection() {
               description={t.hints[mode]}
               rgOptions={MODES.map((m) => ({ data: m, label: t.modes[m] }))}
               selectedOption={mode}
-              onChange={(o) => setMode(String(o.data))}
+              onChange={(o) => {
+                const m = String(o.data);
+                if (game) chosenMode[game.appid] = m;
+                setMode(m);
+              }}
             />
           </PanelSectionRow>
           {isRunning && (
