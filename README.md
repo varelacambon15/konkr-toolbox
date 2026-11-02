@@ -69,6 +69,14 @@ Modo Escritorio.
   en una Konkr real**: en Modo Juego solo se comparte la pantalla X de Steam, no el juego en pantalla completa.
 - Seguridad: HTTP sin cifrar, pensado para una red de casa. En un router compartido, apágalo al terminar.
 
+### Gestor de mods (Skyrim SE, Fallout 4, Oblivion)
+- Instala **Konkr Mod Manager** con un botón (copia incluida en el plugin; solo usa tu carpeta de usuario).
+- Interruptor del **servidor para el móvil y el ordenador**: muestra la dirección, el PIN y un código QR que ya lleva el PIN.
+  Desde el navegador de tu móvil o portátil exploras Nexus, envías mods a la consola, ordenas y aplicas, y pegas
+  tu clave de API de Nexus (Premium: descargas directas).
+- Nuevo PIN (desempareja todo) y desinstalar (conserva tus mods).
+- Código y manual completo en la carpeta `modmanager/`.
+
 ## Instalación
 
 Decky ya viene instalado en SteamOS ARM para la Pocket FIT.

@@ -1,6 +1,6 @@
 {
   "name": "konkr-toolbox",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Decky plugin for the KONKR Pocket FIT on SteamOS ARM: Konkr Tweaks game modes and SSH options in the Quick Access Menu",
   "type": "module",
   "scripts": {
@@ -11,7 +11,14 @@
     "type": "git",
     "url": "git+https://github.com/varelacambon15/konkr-toolbox.git"
   },
-  "keywords": ["decky", "plugin", "steamos", "konkr", "pocket-fit", "arm"],
+  "keywords": [
+    "decky",
+    "plugin",
+    "steamos",
+    "konkr",
+    "pocket-fit",
+    "arm"
+  ],
   "author": "Alejandro (varelacambon15)",
   "license": "MIT",
   "devDependencies": {
@@ -29,7 +36,10 @@
   },
   "pnpm": {
     "peerDependencyRules": {
-      "ignoreMissing": ["react", "react-dom"]
+      "ignoreMissing": [
+        "react",
+        "react-dom"
+      ]
     }
   }
 }

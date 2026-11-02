@@ -121,6 +121,26 @@ async def _remote(*args, timeout=40):
         return {"ok": False, "error": err[-200:] or out[-200:] or f"rc={rc}"}
 
 
+# ------------------------------------------------------------------ Gestor de mods
+
+async def _mods(*args, timeout=60):
+    script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "py_modules", "ktb_modmanager.py")
+    rc, out, err = await _run([PY, script, *args], timeout=timeout, as_user=True)
+    line = out.splitlines()[-1] if out else ""
+    try:
+        return json.loads(line)
+    except ValueError:
+        decky.logger.error(f"mods {args}: rc={rc} out={out[-300:]} err={err[-500:]}")
+        return {"ok": False, "error": err[-200:] or out[-200:] or f"rc={rc}"}
+
+
+def _best_ip(addrs):
+    for a in addrs:
+        if a["iface"].startswith("wl"):
+            return a["ip"]
+    return addrs[0]["ip"] if addrs else ""
+
+
 # ------------------------------------------------------------------ SSH
 
 async def _systemctl(*args):
@@ -262,6 +282,42 @@ class Plugin:
     async def remote_stop(self):
         st = await _remote("stop")
         st["addresses"] = await _addresses()
+        return st
+
+    # ---------- Gestor de mods
+    async def mods_status(self):
+        addrs = await _addresses()
+        st = await _mods("status", _best_ip(addrs))
+        st["addresses"] = addrs
+        return st
+
+    async def mods_install(self):
+        st = await _mods("install", timeout=240)
+        decky.logger.info(f"mods install: ok={st.get('ok')} error={st.get('error')}")
+        addrs = await _addresses()
+        if st.get("ok") and st.get("service"):
+            st = await _mods("status", _best_ip(addrs))
+        st["addresses"] = addrs
+        return st
+
+    async def mods_uninstall(self):
+        st = await _mods("uninstall")
+        st["addresses"] = await _addresses()
+        return st
+
+    async def mods_service(self, on):
+        addrs = await _addresses()
+        st = await _mods("service", "on" if on else "off")
+        if st.get("ok") and st.get("service"):
+            st = await _mods("status", _best_ip(addrs))
+        st["addresses"] = addrs
+        return st
+
+    async def mods_newpin(self):
+        addrs = await _addresses()
+        await _mods("newpin")
+        st = await _mods("status", _best_ip(addrs))
+        st["addresses"] = addrs
         return st
 
     # ---------- ciclo de vida

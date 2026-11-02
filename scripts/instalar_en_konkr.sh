@@ -11,4 +11,19 @@ sudo rm -rf "$P/konkr-toolbox"
 sudo cp -r "$T/konkr-toolbox" "$P/konkr-toolbox"
 sudo chown -R root:root "$P/konkr-toolbox"
 sudo systemctl restart plugin_loader.service
+# Acceso en el menú (Modo Escritorio) para abrir Claude Code en una terminal, si está instalado.
+# Para Modo Juego: clic derecho sobre él en el menú → «Añadir a Steam» (tú decides; aquí no se toca Steam).
+if [ -x "$HOME/.local/bin/claude" ]; then
+  mkdir -p "$HOME/.local/share/applications"
+  cat > "$HOME/.local/share/applications/claude-code.desktop" <<DESK
+[Desktop Entry]
+Type=Application
+Name=Claude Code
+Comment=Claude Code en una terminal
+Exec=konsole --workdir $HOME -e $HOME/.local/bin/claude
+Icon=utilities-terminal
+Terminal=false
+Categories=Utility;Development;
+DESK
+fi
 echo "Instalado: $(basename "$Z"). Abre Modo Juego → menú ··· (Decky)."

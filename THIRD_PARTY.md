@@ -8,3 +8,6 @@ El control remoto (sección "Control remoto") incluye estas piezas sin modificar
   (ver `py_modules/vendor/websockify/COPYING`). Origen: paquete PyPI `websockify`.
 
 `x11vnc` NO se incluye: es un programa del sistema que debe estar instalado en la consola.
+
+## Konkr Mod Manager (modmanager/)
+Código propio del autor (MIT). Incluye `qrcodegen.py` de Project Nayuki (MIT).

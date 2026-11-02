@@ -7,6 +7,7 @@ import { DepsSection } from "./DepsSection";
 import { MapsSection } from "./MapsSection";
 import { SshSection } from "./SshSection";
 import { RemoteSection } from "./RemoteSection";
+import { ModsSection } from "./ModsSection";
 import { t } from "./i18n";
 
 // Cada herramienta es una sección cerrada detrás de un botón.
@@ -22,6 +23,9 @@ function Content() {
       </Collapsible>
       <Collapsible id="maps" title={t.mapsTitle}>
         <MapsSection />
+      </Collapsible>
+      <Collapsible id="mods" title={t.modsTitle}>
+        <ModsSection />
       </Collapsible>
       <Collapsible id="ssh" title={t.sshTitle}>
         <SshSection />

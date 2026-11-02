@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#18202C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Konkr Mods</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<style>
+:root{
+  --bg:#18202C; --surface:#212B3A; --raised:#283446; --line:#2F3B4E;
+  --ink:#E9EDF3; --muted:#8E99AB; --brass:#E0A43A; --brass-ink:#1C1406;
+  --ok:#5DBE8A; --bad:#E06A5C;
+  --r-sm:8px; --r-lg:16px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--brass)}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- estructura */
+#app{max-width:720px;margin:0 auto;min-height:100vh;padding-bottom:calc(72px + var(--safe-b))}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 16px 10px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.brand svg{width:26px;height:26px}
+.brand h1{font-size:17px;margin:0;font-weight:700;letter-spacing:.2px}
+.brand .conn{margin-left:auto;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+.dot.off{background:var(--bad)}
+.games{display:flex;background:var(--surface);border-radius:999px;padding:3px}
+.games button{flex:1;border:0;background:none;padding:8px 4px;border-radius:999px;color:var(--muted);font-weight:600;font-size:14px;white-space:nowrap}
+.games button[aria-pressed=true]{background:var(--raised);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.games button .warn{color:var(--brass)}
+main{padding:12px 16px}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);
+  display:flex;justify-content:center;padding-bottom:var(--safe-b)}
+nav.tabs .in{display:flex;max-width:720px;width:100%}
+nav.tabs button{flex:1;border:0;background:none;padding:9px 0 8px;color:var(--muted);font-size:12px;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
+nav.tabs svg{width:23px;height:23px}
+nav.tabs button[aria-current=page]{color:var(--brass)}
+.badge[hidden]{display:none}
+.badge{position:absolute;top:4px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:9px;background:var(--brass);color:var(--brass-ink);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 5px}
+
+/* ---------- controles */
+.btn{border:1px solid var(--line);background:var(--raised);border-radius:var(--r-sm);padding:10px 14px;font-weight:600;min-height:42px}
+.btn.primary{background:var(--brass);border-color:var(--brass);color:var(--brass-ink)}
+.btn.ghost{background:none}
+.btn.danger{color:var(--bad)}
+.btn.small{min-height:34px;padding:6px 11px;font-size:14px}
+.btn:disabled{opacity:.45}
+.row{display:flex;gap:8px;align-items:center}
+.grow{flex:1;min-width:0}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.search{display:flex;gap:8px;margin-bottom:10px}
+.search input{flex:1;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:10px 12px}
+.search input::placeholder{color:var(--muted)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{border:1px solid var(--line);background:none;border-radius:999px;padding:6px 13px;color:var(--muted);white-space:nowrap;font-size:14px}
+.chip[aria-pressed=true]{border-color:var(--brass);color:var(--ink);background:rgba(224,164,58,.12)}
+.seg{display:flex;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;margin-bottom:12px}
+.seg button{flex:1;border:0;background:none;padding:9px;color:var(--muted);font-weight:600}
+.seg button[aria-pressed=true]{background:var(--raised);color:var(--ink)}
+.switch{position:relative;width:44px;height:26px;flex:none}
+.switch input{appearance:none;-webkit-appearance:none;margin:0;width:44px;height:26px;border-radius:13px;background:var(--line);transition:background .15s}
+.switch input:checked{background:var(--ok)}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s}
+.switch input:checked::after{transform:translateX(18px)}
+.tag{display:inline-block;font-size:12px;padding:1px 7px;border-radius:999px;border:1px solid var(--brass);color:var(--brass);white-space:nowrap}
+.tag.ok{border-color:var(--ok);color:var(--ok)}
+.empty{text-align:center;color:var(--muted);padding:40px 16px}
+.empty b{display:block;color:var(--ink);font-size:16px;margin-bottom:6px}
+
+/* ---------- explorar */
+.mods{list-style:none;margin:0;padding:0}
+.mods li{border-bottom:1px solid var(--line)}
+.mods li button.item{display:flex;gap:12px;width:100%;text-align:left;border:0;background:none;padding:12px 0}
+.thumb{width:104px;height:58px;border-radius:var(--r-sm);background:var(--surface) center/cover no-repeat;flex:none}
+.item .t{font-weight:650;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.item .s{font-size:13px;color:var(--muted);margin-top:3px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.stat{display:inline-flex;align-items:center;gap:4px}
+.stat svg{width:14px;height:14px}
+.more{display:block;width:100%;margin:14px 0}
+
+/* ---------- ficha */
+.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;transform:translateY(100%);transition:transform .22s ease-out}
+.sheet.open{transform:none}
+.sheet .wrap{max-width:720px;margin:0 auto;padding-bottom:calc(40px + var(--safe-b))}
+.hero{position:relative;aspect-ratio:16/9;background:var(--surface) center/cover no-repeat}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(24,32,44,.35) 0,rgba(24,32,44,0) 30%,rgba(24,32,44,.4) 55%,var(--bg) 100%)}
+.hero .back{position:absolute;z-index:2;top:calc(10px + env(safe-area-inset-top,0px));left:10px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(24,32,44,.75);display:flex;align-items:center;justify-content:center}
+.hero h2{position:absolute;z-index:2;left:16px;right:16px;bottom:6px;margin:0;font-size:24px;line-height:1.2;font-weight:750;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+.detail{padding:4px 16px}
+.byline{color:var(--muted);font-size:14px;margin-bottom:10px}
+.stats{display:flex;gap:16px;color:var(--muted);font-size:14px;margin-bottom:12px}
+.summary{font-size:16px;line-height:1.5;margin:0 0 14px}
+.notice{background:rgba(224,164,58,.1);border:1px solid rgba(224,164,58,.4);border-radius:var(--r-sm);padding:10px 12px;margin:10px 0;font-size:14px}
+.notice.okn{background:rgba(93,190,138,.08);border-color:rgba(93,190,138,.4)}
+.notice.badn{background:rgba(224,106,92,.08);border-color:rgba(224,106,92,.45)}
+h3{font-size:17px;margin:22px 0 8px}
+.files{list-style:none;margin:0;padding:0}
+.files li{border:1px solid var(--line);border-radius:var(--r-sm);padding:12px;margin-bottom:8px;background:var(--surface)}
+.files li.primary{border-color:rgba(224,164,58,.55)}
+.files .fn{font-weight:650;word-break:break-word}
+.files .fm{font-size:13px;color:var(--muted);margin:3px 0 10px;display:flex;gap:12px;flex-wrap:wrap}
+.files .fd{font-size:13px;color:var(--muted);margin:-4px 0 10px}
+.files .btn{width:100%}
+details.group>summary{cursor:pointer;color:var(--muted);padding:8px 0;list-style:none}
+details.group>summary::before{content:"▸ ";color:var(--brass)}
+details.group[open]>summary::before{content:"▾ "}
+.desc{font-size:15px;line-height:1.55;overflow-wrap:anywhere;border-top:1px solid var(--line);padding-top:6px}
+.desc img{max-width:100%;height:auto;border-radius:6px}
+.desc .c{text-align:center}
+.desc blockquote{margin:8px 0;padding:6px 12px;border-left:3px solid var(--line);color:var(--muted)}
+.desc pre{white-space:pre-wrap;background:var(--surface);padding:8px;border-radius:6px}
+
+/* ---------- mis mods */
+.banner{display:flex;gap:12px;align-items:center;background:rgba(224,164,58,.12);border:1px solid rgba(224,164,58,.45);border-radius:var(--r-lg);padding:12px 14px;margin-bottom:12px}
+.banner.clean{background:var(--surface);border-color:var(--line)}
+.banner p{margin:0;flex:1;font-size:14px}
+.mine{list-style:none;margin:0;padding:0}
+.mine li{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.mine li.off .name{color:var(--muted)}
+.mine .pos{width:24px;text-align:right;color:var(--muted);font-size:13px;flex:none}
+.mine .name{font-weight:600;overflow-wrap:anywhere}
+.mine .meta{font-size:13px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:2px}
+.iconbtn{width:38px;height:38px;border-radius:var(--r-sm);border:1px solid var(--line);background:none;display:flex;align-items:center;justify-content:center;flex:none}
+.iconbtn svg{width:20px;height:20px}
+.toolbar{display:flex;gap:8px;margin:14px 0 4px;flex-wrap:wrap}
+
+/* ---------- descargas */
+.job{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;margin-bottom:10px}
+.job.needs{border-color:var(--brass)}
+.job .jt{font-weight:650;overflow-wrap:anywhere}
+.job .js{font-size:14px;color:var(--muted);margin:4px 0 10px}
+.job.err .js{color:var(--bad)}
+.job.done .js{color:var(--ok)}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--brass);transition:width .3s}
+.bar.indet i{width:35%!important;animation:slide 1.2s linear infinite}
+@keyframes slide{from{transform:translateX(-100%)}to{transform:translateX(300%)}}
+.cands{list-style:none;margin:8px 0;padding:0;max-height:300px;overflow:auto;border:1px solid var(--line);border-radius:var(--r-sm)}
+.cands label{display:flex;gap:10px;padding:10px;border-bottom:1px solid var(--line);align-items:flex-start}
+.cands input{width:20px;height:20px;margin-top:1px;accent-color:var(--brass);flex:none}
+.cands .p{font-weight:600;overflow-wrap:anywhere}
+.cands .k{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.radios{display:flex;flex-direction:column;gap:6px;margin:8px 0 12px;font-size:14px}
+.radios input{accent-color:var(--brass)}
+
+/* ---------- ajustes / login / avisos */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 6px}
+.card p{margin:4px 0 10px;color:var(--muted);font-size:14px}
+.login{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:24px;max-width:420px;margin:0 auto}
+.login svg{width:56px;height:56px;margin-bottom:14px}
+.login h1{font-size:26px;margin:0 0 6px}
+.login p{color:var(--muted);margin:0 0 22px}
+.pin{width:100%;font-size:34px;letter-spacing:12px;text-align:center;padding:12px;border-radius:var(--r-lg);border:1px solid var(--line);background:var(--surface);margin-bottom:12px;font-variant-numeric:tabular-nums}
+#toast{position:fixed;left:16px;right:16px;bottom:calc(84px + var(--safe-b));z-index:40;display:flex;justify-content:center;pointer-events:none}
+#toast div{background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:var(--r-sm);font-weight:600;max-width:520px;box-shadow:0 6px 24px rgba(0,0,0,.4);opacity:0;transform:translateY(8px);transition:.2s}
+#toast div.show{opacity:1;transform:none}
+#toast div.bad{background:var(--bad);color:#fff}
+.modal{position:fixed;inset:0;z-index:30;background:rgba(10,14,20,.6);display:flex;align-items:flex-end;justify-content:center}
+.modal .box{background:var(--surface);width:100%;max-width:720px;border-radius:var(--r-lg) var(--r-lg) 0 0;padding:18px 16px calc(18px + var(--safe-b))}
+.modal h4{margin:0 0 4px;font-size:17px}
+.modal p{margin:0 0 14px;color:var(--muted);font-size:14px}
+.modal .acts{display:flex;flex-direction:column;gap:8px}
+.modal input[type=text],.modal input[type=url]{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);padding:11px 12px;margin-bottom:12px}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--brass);border-radius:50%;animation:rot .8s linear infinite;vertical-align:-3px}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* ---------- filtros del explorador */
+.search .mode{flex:none;border:1px solid var(--line);background:var(--raised);border-radius:var(--r-sm);padding:0 11px;font-weight:600;font-size:13px;color:var(--muted);min-width:64px}
+.filters{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.filters .chips{flex:1;min-width:0;margin-bottom:0}
+.catbtn{display:inline-flex;align-items:center;gap:6px;flex:none;max-width:48%}
+.catbtn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.catbtn svg{width:16px;height:16px;flex:none}
+.catbtn .clr{display:inline-flex;margin-left:2px;color:var(--muted)}
+.resline{margin:6px 0 4px}
+.catlist{list-style:none;margin:0 0 12px;padding:0;max-height:55vh;overflow:auto;border:1px solid var(--line);border-radius:var(--r-sm)}
+.catlist button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;padding:11px 12px;font-size:15px}
+.catlist button[aria-pressed=true]{color:var(--brass);font-weight:650}
+.catlist li[hidden]{display:none}
+.sel{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);padding:10px 12px;color:var(--ink)}
+.modal input[type=text]#cf{margin-bottom:10px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+
+<script>
+"use strict";
+// --------------------------------------------------------------------------- idioma
+// Los textos están en español y son la clave del catálogo (locale/<idioma>.json en la consola).
+let CAT = {}, LANG = "es";
+function T(s, vars){
+  let t = CAT[s] || s;
+  if (vars) t = t.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
+  return t;
+}
+async function loadI18n(){
+  try {
+    const d = await (await fetch("/api/i18n")).json();
+    CAT = d.catalog || {}; LANG = d.language || "es";
+    document.documentElement.lang = LANG;
+  } catch {}
+}
+
+// --------------------------------------------------------------------------- utilidades
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v){ try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} },
+};
+const fmtNum = n => { try { return new Intl.NumberFormat(LANG, {notation: "compact", maximumFractionDigits: 1}).format(n || 0); } catch { return String(n || 0); } };
+const fmtDec = n => { try { return new Intl.NumberFormat(LANG, {maximumFractionDigits: 1}).format(n); } catch { return String(n); } };
+const fmtSize = kb => kb >= 1048576 ? fmtDec(kb/1048576) + " GB" : kb >= 1024 ? fmtDec(kb/1024) + " MB" : Math.max(1, Math.round(kb)) + " KB";
+const fmtBytes = b => fmtSize((b || 0) / 1024);
+const fmtDate = ts => { try { return ts ? new Date(ts * 1000).toLocaleDateString(LANG, {day:"numeric", month:"short", year:"numeric"}) : ""; } catch { return ""; } };
+
+const I = {
+  logo:`<svg viewBox="0 0 32 32" fill="none"><rect x="3" y="8" width="26" height="16" rx="8" fill="#283446" stroke="#E0A43A" stroke-width="2"/><path d="M10 13v6M7 16h6" stroke="#E9EDF3" stroke-width="2" stroke-linecap="round"/><circle cx="21" cy="14" r="1.6" fill="#E0A43A"/><circle cx="24" cy="18" r="1.6" fill="#E9EDF3"/></svg>`,
+  explore:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`,
+  mods:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"/></svg>`,
+  dl:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>`,
+  gear:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14.2 3h-4l-.4 2.6a7 7 0 0 0-2 1.2l-2.4-.9-2 3.4 2 1.5a7 7 0 0 0 0 2.4l-2 1.5 2 3.4 2.4-.9a7 7 0 0 0 2 1.2l.4 2.6h4l.4-2.6a7 7 0 0 0 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2Z"/></svg>`,
+  heart:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.1 0 3.6 1.2 5.2 3 1.6-1.8 3.1-3 5.2-3 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21Z"/></svg>`,
+  down:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 4v12m0 0-5-5m5 5 5-5M5 20h14"/></svg>`,
+  back:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2.2"><path d="m15 5-7 7 7 7"/></svg>`,
+  dots:`<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>`,
+  up:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 15 6-6 6 6"/></svg>`,
+  dn:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>`,
+  link:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>`,
+  folder:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>`,
+  x:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6 6 18"/></svg>`,
+};
+
+const SHORT = {skyrimse:"Skyrim SE", fallout4:"Fallout 4", oblivion:"Oblivion"};
+const SORTS = () => [["trending", T("Tendencias")], ["popular", T("Más valorados")], ["downloads", T("Más descargados")],
+                     ["latest_added", T("Nuevos")], ["latest_updated", T("Actualizados")]];
+const FILECATS = () => ({MAIN: T("Principales"), UPDATE: T("Actualizaciones"), OPTIONAL: T("Opcionales"),
+                         MISCELLANEOUS: T("Otros"), OLD_VERSION: T("Versiones antiguas")});
+const ACTIVE = ["queued", "running", "needs_choice"];
+
+// --------------------------------------------------------------------------- estado
+const S = {
+  token: store.get("kmm.token"),
+  game: store.get("kmm.game") || "skyrimse",
+  tab: store.get("kmm.tab") || "explore",
+  overview: null, online: true,
+  browse: {kind: "trending", q: "", mode: "name", cat: null, items: [], total: 0, offset: 0, loading: false, error: "", key: ""},
+  cats: {},
+  gs: null, minePane: "mods", updates: null,
+  jobs: [], jobStates: {},
+  detail: null,
+};
+
+// --------------------------------------------------------------------------- API
+async function api(path, body){
+  const opt = {headers: {"X-KMM-Token": S.token || ""}};
+  if (body !== undefined){ opt.method = "POST"; opt.headers["Content-Type"] = "application/json"; opt.body = JSON.stringify(body); }
+  let r;
+  try { r = await fetch(path, opt); }
+  catch { setOnline(false); throw new Error(T("No hay conexión con la consola. ¿Está encendida y en la misma Wi-Fi?")); }
+  setOnline(true);
+  let d = {};
+  try { d = await r.json(); } catch {}
+  if (r.status === 401){ S.token = null; store.set("kmm.token", null); renderLogin(); throw new Error(d.error || T("Empareja de nuevo")); }
+  if (!r.ok) throw new Error(d.error || T("Error {code}", {code: r.status}));
+  return d;
+}
+function setOnline(v){
+  if (S.online === v) return;
+  S.online = v;
+  const c = $(".conn"); if (c) c.innerHTML = connHtml();
+}
+function connHtml(){
+  const host = S.overview?.host || T("consola");
+  return S.online ? `<span class="dot"></span>${esc(host)}` : `<span class="dot off"></span>${esc(T("Sin conexión"))}`;
+}
+
+let toastTimer;
+function toast(msg, bad){
+  const t = $("#toast");
+  t.innerHTML = `<div class="${bad ? "bad" : ""}" role="status">${esc(msg)}</div>`;
+  requestAnimationFrame(() => t.firstChild.classList.add("show"));
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.firstChild && t.firstChild.classList.remove("show"), 3200);
+}
+const fail = e => toast(e.message || String(e), true);
+
+// --------------------------------------------------------------------------- emparejar
+function renderLogin(err){
+  $("#app").innerHTML = `
+  <form class="login" id="loginf">
+    ${I.logo}
+    <h1>Konkr Mods</h1>
+    <p>${esc(T("Escribe el PIN que aparece en la consola, en Konkr Mod Manager → pestaña Móvil."))}</p>
+    <input class="pin" id="pin" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*" aria-label="${esc(T("PIN de 6 cifras"))}" placeholder="······">
+    ${err ? `<div class="notice badn">${esc(err)}</div>` : ""}
+    <button class="btn primary" type="submit">${esc(T("Emparejar"))}</button>
+  </form>`;
+  $("#pin").focus();
+  $("#loginf").onsubmit = ev => { ev.preventDefault(); doLogin($("#pin").value); };
+}
+async function doLogin(pin){
+  try {
+    const r = await fetch("/api/login", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({pin})});
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) return renderLogin(d.error || T("No se pudo emparejar"));
+    S.token = d.token; store.set("kmm.token", d.token);
+    boot();
+  } catch { renderLogin(T("No hay conexión con la consola.")); }
+}
+
+// --------------------------------------------------------------------------- marco
+function shell(){
+  const tabs = [["explore", T("Explorar"), I.explore], ["mine", T("Mis mods"), I.mods], ["jobs", T("Descargas"), I.dl], ["settings", T("Ajustes"), I.gear]];
+  $("#app").innerHTML = `
+  <header class="top">
+    <div class="brand">${I.logo}<h1>Konkr Mods</h1><span class="conn">${connHtml()}</span></div>
+    <div class="games" role="group" aria-label="${esc(T("Juego"))}">${Object.keys(SHORT).map(k =>
+      `<button data-game="${k}" aria-pressed="${k === S.game}">${SHORT[k]}</button>`).join("")}</div>
+  </header>
+  <main id="view"></main>
+  <nav class="tabs"><div class="in">
+    ${tabs.map(([k, l, ic]) =>
+      `<button data-tab="${k}" ${S.tab === k ? 'aria-current="page"' : ""}>${ic}<span>${esc(l)}</span>${k === "jobs" ? '<span class="badge" id="jobbadge" hidden></span>' : ""}</button>`).join("")}
+  </div></nav>
+  <section class="sheet" id="sheet" aria-modal="true" role="dialog"></section>`;
+  document.querySelectorAll("[data-game]").forEach(b => b.onclick = () => setGame(b.dataset.game));
+  document.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => setTab(b.dataset.tab));
+  markGames();
+}
+function markGames(){
+  document.querySelectorAll("[data-game]").forEach(b => {
+    b.setAttribute("aria-pressed", b.dataset.game === S.game);
+    const g = S.overview?.games?.find(x => x.key === b.dataset.game);
+    b.innerHTML = SHORT[b.dataset.game] + (g?.dirty ? ` <span class="warn" title="${esc(T("Cambios sin aplicar"))}">•</span>` : "");
+  });
+}
+function setGame(g){
+  if (g === S.game) return;
+  S.game = g; store.set("kmm.game", g);
+  Object.assign(S.browse, {items: [], key: "", cat: null});
+  S.gs = null; S.updates = null;
+  markGames(); render();
+}
+function setTab(t){
+  S.tab = t; store.set("kmm.tab", t);
+  document.querySelectorAll("[data-tab]").forEach(b => b.dataset.tab === t ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
+  render(); window.scrollTo(0, 0);
+}
+function render(){
+  ({explore: renderExplore, mine: renderMine, jobs: renderJobs, settings: renderSettings})[S.tab]();
+}
+
+// --------------------------------------------------------------------------- explorar
+const browseKey = () => { const b = S.browse; return [S.game, b.kind, b.q, b.mode, b.cat || ""].join("|"); };
+function effectiveKind(){
+  const b = S.browse;
+  if (b.kind === "trending" && (b.q || b.cat)) return b.q ? "relevance" : "popular";
+  return b.kind;
+}
+function renderExplore(){
+  const b = S.browse;
+  const v = $("#view");
+  const filtered = b.q || b.cat;
+  const sorts = SORTS().filter(([k]) => !(k === "trending" && filtered));
+  if (b.q) sorts.unshift(["relevance", T("Relevancia")]);
+  const kind = effectiveKind();
+  v.innerHTML = `
+    <form class="search" id="sf" role="search">
+      <button type="button" class="mode" id="mode" aria-label="${esc(T("Buscar por"))}">${esc(b.mode === "author" ? T("Autor") : T("Nombre"))}</button>
+      <input type="search" id="q" placeholder="${esc(b.mode === "author" ? T("Buscar por autor") : T("Buscar mods de {game}", {game: SHORT[S.game]}))}" value="${esc(b.q)}" enterkeyhint="search" aria-label="${esc(T("Buscar mods"))}">
+      <button type="button" class="iconbtn" id="paste" title="${esc(T("Abrir un enlace de Nexus"))}" aria-label="${esc(T("Abrir un enlace de Nexus"))}">${I.link}</button>
+    </form>
+    <div class="filters">
+      <button class="chip catbtn" id="catbtn" aria-pressed="${!!b.cat}">${I.folder}<span>${esc(b.cat || T("Categorías"))}</span>${b.cat ? `<span class="clr" id="catclr" role="button" aria-label="${esc(T("Quitar categoría"))}">${I.x}</span>` : ""}</button>
+      <div class="chips" role="group" aria-label="${esc(T("Ordenar"))}">${sorts.map(([k, l]) => `<button class="chip" data-kind="${k}" aria-pressed="${k === kind}">${esc(l)}</button>`).join("")}</div>
+    </div>
+    ${filtered ? `<div class="row small muted resline"><span class="grow">${esc(b.total ? T("{n} mods encontrados", {n: fmtNum(b.total)}) : (b.loading ? T("Buscando…") : ""))}</span><button class="btn small ghost" id="clr">${esc(T("Quitar filtros"))}</button></div>` : ""}
+    <ul class="mods" id="list"></ul>
+    <div id="lmore"></div>`;
+  $("#sf").onsubmit = ev => { ev.preventDefault(); $("#q").blur(); b.q = $("#q").value.trim(); loadBrowse(); };
+  $("#q").addEventListener("search", () => { if (!$("#q").value && b.q){ b.q = ""; loadBrowse(); } });
+  $("#mode").onclick = () => { b.mode = b.mode === "name" ? "author" : "name"; if (b.q) loadBrowse(); else renderExplore(); $("#q").focus(); };
+  $("#clr") && ($("#clr").onclick = () => { b.q = ""; b.cat = null; if (b.kind === "relevance") b.kind = "trending"; loadBrowse(); });
+  $("#paste").onclick = openLinkModal;
+  $("#catbtn").onclick = e => { if (e.target.closest("#catclr")){ b.cat = null; loadBrowse(); } else openCategories(); };
+  document.querySelectorAll("[data-kind]").forEach(c => c.onclick = () => { b.kind = c.dataset.kind; loadBrowse(); });
+  if (b.key !== browseKey()) loadBrowse(); else drawList();
+}
+async function loadBrowse(more){
+  const b = S.browse;
+  const key = browseKey();
+  if (!more){ b.items = []; b.offset = 0; b.total = 0; b.error = ""; }
+  b.key = key; b.loading = true;
+  if (S.tab === "explore" && !more) renderExplore(); else drawList();
+  const qs = new URLSearchParams({game: S.game, kind: effectiveKind(), offset: more ? b.offset : 0});
+  if (b.q) qs.set(b.mode === "author" ? "author" : "q", b.q);
+  if (b.cat) qs.set("category", b.cat);
+  try {
+    const d = await api(`/api/nexus/browse?${qs}`);
+    if (b.key !== key) return;
+    b.items = more ? b.items.concat(d.items) : d.items;
+    b.total = d.total; b.offset = (more ? b.offset : 0) + 24;
+  } catch (e) { if (b.key === key) b.error = e.message; }
+  b.loading = false;
+  if (S.tab === "explore"){ const rl = $(".resline span"); if (rl) rl.textContent = b.total ? T("{n} mods encontrados", {n: fmtNum(b.total)}) : ""; drawList(); }
+}
+function drawList(){
+  const b = S.browse, ul = $("#list"), lm = $("#lmore");
+  if (!ul) return;
+  if (b.error && !b.items.length){
+    ul.innerHTML = `<li class="empty"><b>${esc(T("No se ha podido cargar"))}</b>${esc(b.error)}</li>`; lm.innerHTML = ""; return;
+  }
+  if (!b.items.length){
+    ul.innerHTML = b.loading ? `<li class="empty"><span class="spin"></span></li>` :
+      `<li class="empty"><b>${esc(b.q || b.cat ? T("Sin resultados") : T("Nada por aquí"))}</b>${esc(b.q ? T("Prueba con otra palabra o con el nombre en inglés.") : "")}</li>`;
+    lm.innerHTML = ""; return;
+  }
+  ul.innerHTML = b.items.map((m, i) => `<li><button class="item" data-i="${i}">
+      <span class="thumb" style="${m.picture ? `background-image:url('${esc(m.picture)}')` : ""}"></span>
+      <span class="grow"><span class="t">${esc(m.name)}</span>
+      <span class="s"><span>${esc(m.author)}</span>
+        <span class="stat" title="${esc(T("Valoraciones"))}">${I.heart}${fmtNum(m.endorsements)}</span>
+        <span class="stat" title="${esc(T("Descargas"))}">${I.down}${fmtNum(m.downloads)}</span>
+        ${m.installed?.length ? `<span class="tag ok">${esc(T("Instalado"))}</span>` : ""}</span></span>
+    </button></li>`).join("");
+  ul.querySelectorAll("[data-i]").forEach(el => el.onclick = () => openDetail(b.items[+el.dataset.i].mod_id));
+  const canMore = effectiveKind() !== "trending" && b.items.length < b.total;
+  lm.innerHTML = b.loading ? `<div class="empty"><span class="spin"></span></div>` :
+    canMore ? `<button class="btn more" id="more">${esc(T("Cargar más"))}</button>` : "";
+  $("#more") && ($("#more").onclick = () => loadBrowse(true));
+}
+async function openCategories(){
+  let cats = S.cats[S.game];
+  if (!cats){
+    modal(`<div class="empty"><span class="spin"></span></div>`);
+    try { cats = S.cats[S.game] = (await api(`/api/nexus/categories?game=${S.game}`)).categories; }
+    catch (e) { closeModal(); return fail(e); }
+  }
+  const byParent = {};
+  cats.forEach(c => (byParent[c.parent || 0] ||= []).push(c));
+  const tops = (byParent[0] || []).filter(c => !byParent[c.id] || true).sort((a, b) => a.name.localeCompare(b.name));
+  const rows = [];
+  const walk = (list, depth) => list.sort((a, b) => a.name.localeCompare(b.name)).forEach(c => {
+    rows.push({c, depth}); if (byParent[c.id]) walk(byParent[c.id], depth + 1);
+  });
+  walk(tops, 0);
+  // categorías cuyo padre no aparece en la lista
+  const seen = new Set(rows.map(r => r.c.id));
+  cats.filter(c => !seen.has(c.id)).forEach(c => rows.push({c, depth: 0}));
+  modal(`<h4>${esc(T("Categorías de {game}", {game: SHORT[S.game]}))}</h4>
+    <input type="text" id="cf" placeholder="${esc(T("Filtrar categorías"))}" autocomplete="off">
+    <ul class="catlist" id="cl">
+      <li><button data-cat="">${esc(T("Todas las categorías"))}</button></li>
+      ${rows.map(({c, depth}) => `<li><button data-cat="${esc(c.name)}" style="padding-left:${12 + depth * 18}px" ${S.browse.cat === c.name ? 'aria-pressed="true"' : ""}>${esc(c.name)}</button></li>`).join("")}
+    </ul>
+    <div class="acts"><button class="btn ghost" data-close>${esc(T("Cerrar"))}</button></div>`,
+    box => {
+      box.querySelectorAll("[data-cat]").forEach(btn => btn.onclick = () => {
+        closeModal(); S.browse.cat = btn.dataset.cat || null; loadBrowse();
+      });
+      $("#cf", box).oninput = e => {
+        const q = e.target.value.toLowerCase();
+        box.querySelectorAll("#cl li").forEach(li => li.hidden = q && !li.textContent.toLowerCase().includes(q));
+      };
+    });
+}
+function openLinkModal(){
+  modal(`<h4>${esc(T("Abrir un enlace de Nexus"))}</h4><p>${esc(T("Pega la dirección de la página del mod (o su número)."))}</p>
+    <input type="url" id="lnk" placeholder="https://www.nexusmods.com/…/mods/…" autocomplete="off">
+    <div class="acts"><button class="btn primary" id="go">${esc(T("Abrir"))}</button><button class="btn ghost" data-close>${esc(T("Cancelar"))}</button></div>`,
+    box => {
+      const go = async () => {
+        try {
+          const d = await api("/api/nexus/link", {link: $("#lnk", box).value, game: S.game});
+          closeModal();
+          if (d.game !== S.game) setGame(d.game);
+          openDetail(d.mod_id, d.file_id, d.key ? {key: d.key, expires: d.expires} : null);
+        } catch (e) { fail(e); }
+      };
+      $("#go", box).onclick = go;
+      $("#lnk", box).onkeydown = e => { if (e.key === "Enter") go(); };
+      setTimeout(() => $("#lnk", box).focus(), 50);
+    });
+}
+
+// --------------------------------------------------------------------------- ficha del mod
+async function openDetail(modId, fileId, nxm){
+  const sh = $("#sheet");
+  sh.innerHTML = `<div class="wrap"><div class="hero"><button class="back" aria-label="${esc(T("Volver"))}">${I.back}</button></div><div class="detail"><div class="empty"><span class="spin"></span></div></div></div>`;
+  sh.classList.add("open"); sh.scrollTop = 0;
+  document.body.style.overflow = "hidden";
+  $(".back", sh).onclick = closeDetail;
+  history.pushState({sheet: 1}, "");
+  try {
+    const d = await api(`/api/nexus/mod?game=${S.game}&id=${modId}`);
+    S.detail = {d, fileId, nxm};
+    drawDetail();
+  } catch (e) {
+    $(".detail", sh).innerHTML = `<div class="empty"><b>${esc(T("No se ha podido abrir"))}</b>${esc(e.message)}</div>`;
+  }
+}
+function closeDetail(){
+  const sh = $("#sheet");
+  if (!sh.classList.contains("open")) return;
+  sh.classList.remove("open"); document.body.style.overflow = ""; S.detail = null;
+  if (history.state?.sheet) history.back();
+}
+window.addEventListener("popstate", () => { const sh = $("#sheet"); if (sh?.classList.contains("open")){ sh.classList.remove("open"); document.body.style.overflow = ""; S.detail = null; } });
+
+function drawDetail(){
+  const {d, fileId} = S.detail, sh = $("#sheet");
+  const CATS = FILECATS();
+  const groups = {};
+  d.files.forEach(f => (groups[f.category in CATS ? f.category : "MISCELLANEOUS"] ||= []).push(f));
+  const inst = d.installed || [];
+  const fileHtml = f => {
+    const already = inst.find(x => x.file_id === f.file_id);
+    return `<li class="${f.primary || f.file_id === fileId ? "primary" : ""}">
+      <div class="fn">${esc(f.name)}</div>
+      <div class="fm"><span>${esc(T("Versión {v}", {v: f.version || "?"}))}</span><span>${fmtSize(f.size_kb)}</span><span>${fmtDate(f.uploaded)}</span></div>
+      ${f.description_html ? `<div class="fd">${f.description_html}</div>` : ""}
+      <button class="btn ${already ? "" : "primary"}" data-send="${f.file_id}">${esc(already ? T("Volver a enviar a la Konkr") : T("Enviar a la Konkr"))}</button>
+    </li>`;
+  };
+  const order = ["MAIN", "UPDATE", "OPTIONAL", "MISCELLANEOUS", "OLD_VERSION"];
+  const newer = inst.some(x => x.version && d.version && x.version !== d.version);
+  sh.innerHTML = `<div class="wrap">
+    <div class="hero" style="${d.picture ? `background-image:url('${esc(d.picture)}')` : ""}">
+      <button class="back" aria-label="${esc(T("Volver"))}">${I.back}</button><h2>${esc(d.name)}</h2></div>
+    <div class="detail">
+      <div class="byline">${esc(T("de {author}, versión {version}, actualizado el {date}", {author: d.author, version: d.version || "?", date: fmtDate(d.updated)}))}</div>
+      <div class="stats"><span class="stat">${I.heart}${esc(T("{n} valoraciones", {n: fmtNum(d.endorsements)}))}</span><span class="stat">${I.down}${esc(T("{n} descargas", {n: fmtNum(d.downloads)}))}</span></div>
+      ${inst.length ? `<div class="notice okn">${esc(T("Ya lo tienes en la consola: {list}.", {list: inst.map(x => `«${x.name}»${x.version ? ` (v${x.version})` : ""}`).join(", ")}))}${
+        newer ? ` <b>${esc(T("Hay una versión más nueva: {v}", {v: d.version}))}</b>` : ""}</div>` : ""}
+      ${S.detail.nxm ? `<div class="notice">${esc(T("Enlace de descarga de la web listo: pulsa «Enviar a la Konkr» en el archivo marcado."))}</div>` : ""}
+      <p class="summary">${esc(d.summary)}</p>
+      <h3>${esc(T("Archivos"))}</h3>
+      ${order.filter(c => groups[c]).map(c => c === "OLD_VERSION" || (c === "MISCELLANEOUS" && groups.MAIN) ?
+        `<details class="group"><summary>${esc(CATS[c])} (${groups[c].length})</summary><ul class="files">${groups[c].map(fileHtml).join("")}</ul></details>` :
+        `${c !== "MAIN" ? `<h3 class="muted" style="font-size:15px">${esc(CATS[c])}</h3>` : ""}<ul class="files">${groups[c].map(fileHtml).join("")}</ul>`).join("")}
+      ${!d.files.length ? `<p class="muted">${esc(T("Este mod no tiene archivos disponibles."))}</p>` : ""}
+      <details class="group" style="margin-top:14px"><summary>${esc(T("Descripción completa"))}</summary><div class="desc">${d.description_html || `<p class='muted'>${esc(T("Sin descripción."))}</p>`}</div></details>
+      <p style="margin-top:18px"><a href="${esc(d.url)}" target="_blank" rel="noopener">${esc(T("Ver en Nexus Mods"))}</a></p>
+    </div></div>`;
+  $(".back", sh).onclick = closeDetail;
+  sh.querySelectorAll("[data-send]").forEach(b => b.onclick = () => sendFile(+b.dataset.send));
+}
+function sendFile(fileId){
+  const {d, nxm} = S.detail;
+  const f = d.files.find(x => x.file_id === fileId);
+  const inst = d.installed || [];
+  const extra = nxm && S.detail.fileId === fileId ? nxm : {};
+  const go = async replace => {
+    closeModal();
+    try {
+      const j = await api("/api/nexus/install", {game: S.game, mod_id: d.mod_id, file_id: fileId, replace_id: replace || null, ...extra});
+      S.jobStates[j.id] = j.state;
+      toast(T("Enviado a la Konkr. Lo verás en Descargas."));
+      pollJobs(true);
+    } catch (e) { fail(e); }
+  };
+  if (!inst.length) return go(null);
+  modal(`<h4>${esc(T("Ya tienes este mod"))}</h4><p>${esc(T("¿Quieres sustituir la versión instalada por «{file}» o añadirlo aparte (por ejemplo, un archivo opcional)?", {file: f.name}))}</p>
+    <div class="acts">${inst.map(x => `<button class="btn primary" data-rep="${esc(x.id)}">${esc(T("Sustituir «{name}»", {name: x.name}))}</button>`).join("")}
+    <button class="btn" data-rep="">${esc(T("Añadir como mod aparte"))}</button><button class="btn ghost" data-close>${esc(T("Cancelar"))}</button></div>`,
+    box => box.querySelectorAll("[data-rep]").forEach(b => b.onclick = () => go(b.dataset.rep || null)));
+}
+
+// --------------------------------------------------------------------------- mis mods
+async function loadGame(){
+  try { S.gs = await api(`/api/game/${S.game}`); } catch (e) { fail(e); }
+}
+async function renderMine(){
+  const v = $("#view");
+  if (!S.gs || S.gs.key !== S.game){ v.innerHTML = `<div class="empty"><span class="spin"></span></div>`; await loadGame(); }
+  if (S.tab !== "mine") return;
+  drawMine();
+}
+function drawMine(){
+  const g = S.gs, v = $("#view");
+  if (!g){ v.innerHTML = `<div class="empty"><b>${esc(T("Sin datos"))}</b>${esc(T("No se ha podido leer el estado de la consola."))}</div>`; return; }
+  if (!g.found){ v.innerHTML = `<div class="empty"><b>${esc(T("{game} no está en la consola", {game: g.name}))}</b>${esc(T("Instálalo en Steam o elige su carpeta en Konkr Mod Manager → Juego."))}</div>`; return; }
+  const ups = S.updates ? new Set(S.updates.map(u => u.id)) : new Set();
+  const banner = g.running ? `<div class="banner"><p>${esc(T("{game} está abierto en la consola. Ciérralo para aplicar cambios.", {game: g.name}))}</p></div>` :
+    g.dirty ? `<div class="banner"><p>${esc(T("Hay cambios que todavía no están en el juego."))}</p><button class="btn primary" id="apply">${esc(T("Aplicar"))}</button></div>` :
+    `<div class="banner clean"><p class="muted">${esc(T("El juego tiene exactamente esta lista."))}</p><button class="btn small" id="apply">${esc(T("Aplicar"))}</button></div>`;
+  v.innerHTML = `${banner}
+    ${!g.prefix_ok ? `<div class="notice">${esc(T("Abre {game} una vez desde Steam y ciérralo: así se crea su carpeta de Proton y el orden de plugins se podrá guardar.", {game: g.name}))}</div>` : ""}
+    <div class="seg" role="group"><button data-pane="mods" aria-pressed="${S.minePane === "mods"}">${esc(T("Mods ({n})", {n: g.mods.length}))}</button><button data-pane="plugins" aria-pressed="${S.minePane === "plugins"}">${esc(T("Plugins ({n})", {n: g.plugins.length}))}</button></div>
+    <div id="pane"></div>`;
+  $("#apply") && ($("#apply").onclick = doApply);
+  v.querySelectorAll("[data-pane]").forEach(b => b.onclick = () => { S.minePane = b.dataset.pane; drawMine(); });
+  const pane = $("#pane");
+  if (S.minePane === "mods"){
+    if (!g.mods.length){ pane.innerHTML = `<div class="empty"><b>${esc(T("Todavía no hay mods"))}</b>${esc(T("Busca uno en Explorar y envíalo a la Konkr."))}</div>`; return; }
+    pane.innerHTML = `<ul class="mine">${g.mods.map((m, i) => {
+      const n = m.plugins?.length || 0;
+      const what = m.kind === "root" ? T("Raíz del juego") : n ? (n > 1 ? T("{n} plugins", {n}) : T("1 plugin")) : T("Sin plugins");
+      return `<li class="${m.enabled ? "" : "off"}">
+        <span class="pos">${i + 1}</span>
+        <label class="switch" title="${esc(T("Activar o desactivar"))}"><input type="checkbox" data-tog="${esc(m.id)}" ${m.enabled ? "checked" : ""} aria-label="${esc(T("Activar {name}", {name: m.name}))}"></label>
+        <div class="grow"><div class="name">${esc(m.name)}</div>
+          <div class="meta">${m.version ? `<span>v${esc(m.version)}</span>` : ""}<span>${esc(what)}</span><span>${fmtBytes(m.size)}</span>
+          ${ups.has(m.id) ? `<button class="tag" data-upd="${esc(m.source.mod_id)}">${esc(T("Actualización disponible"))}</button>` : ""}</div></div>
+        <button class="iconbtn" data-act="${esc(m.id)}" aria-label="${esc(T("Más acciones"))}">${I.dots}</button>
+      </li>`; }).join("")}</ul>
+      <div class="toolbar"><button class="btn small" id="chk">${esc(S.updates ? T("Volver a buscar actualizaciones") : T("Buscar actualizaciones"))}</button></div>
+      <p class="small muted">${esc(T("Si dos mods traen el mismo archivo, gana el que está más abajo."))}</p>`;
+    pane.querySelectorAll("[data-tog]").forEach(c => c.onchange = () => modAct(c.dataset.tog, "toggle", c.checked));
+    pane.querySelectorAll("[data-act]").forEach(b => b.onclick = () => modMenu(g.mods.find(m => m.id === b.dataset.act)));
+    pane.querySelectorAll("[data-upd]").forEach(b => b.onclick = () => openDetail(+b.dataset.upd));
+    $("#chk").onclick = checkUpdates;
+  } else {
+    if (!g.plugins.length){ pane.innerHTML = `<div class="empty"><b>${esc(T("No hay plugins"))}</b>${esc(T("Ningún mod activo trae archivos .esp, .esm o .esl."))}</div>`; return; }
+    const kn = {esm: T("Maestro"), esl: T("Ligero"), esp: T("Normal")};
+    pane.innerHTML = `<ul class="mine">${g.plugins.map((p, i) => `
+      <li class="${p.active ? "" : "off"}">
+        <span class="pos">${i + 1}</span>
+        <label class="switch"><input type="checkbox" data-ptog="${esc(p.name)}" ${p.active ? "checked" : ""} aria-label="${esc(T("Activar {name}", {name: p.name}))}"></label>
+        <div class="grow"><div class="name">${esc(p.name)}</div><div class="meta"><span>${esc(kn[p.kind] || "")}</span><span>${esc(p.mod || "")}</span></div></div>
+        <button class="iconbtn" data-pup="${esc(p.name)}" aria-label="${esc(T("Subir"))}" ${i === 0 ? "disabled" : ""}>${I.up}</button>
+        <button class="iconbtn" data-pdn="${esc(p.name)}" aria-label="${esc(T("Bajar"))}" ${i === g.plugins.length - 1 ? "disabled" : ""}>${I.dn}</button>
+      </li>`).join("")}</ul>
+      <p class="small muted">${esc(T("Los maestros y ligeros cargan siempre antes que los normales. Las Creations del juego se respetan y van por delante."))}</p>`;
+    pane.querySelectorAll("[data-ptog]").forEach(c => c.onchange = () => plugAct(c.dataset.ptog, "toggle", c.checked));
+    pane.querySelectorAll("[data-pup]").forEach(b => b.onclick = () => plugAct(b.dataset.pup, "up"));
+    pane.querySelectorAll("[data-pdn]").forEach(b => b.onclick = () => plugAct(b.dataset.pdn, "down"));
+  }
+}
+async function modAct(id, action, value){
+  try { S.gs = await api(`/api/game/${S.game}/mod`, {id, action, value}); refreshOverview(); drawMine(); }
+  catch (e) { fail(e); drawMine(); }
+}
+async function plugAct(name, action, value){
+  try { S.gs = await api(`/api/game/${S.game}/plugin`, {name, action, value}); drawMine(); }
+  catch (e) { fail(e); drawMine(); }
+}
+function modMenu(m){
+  const nx = m.source?.type === "nexus";
+  modal(`<h4>${esc(m.name)}</h4><p>${esc((m.version ? T("Versión {v}.", {v: m.version}) + " " : "") + T("Instalado el {date}.", {date: m.installed || "?"}))}</p>
+    <div class="acts">
+      <div class="row"><button class="btn grow" data-a="top">${esc(T("Al principio"))}</button><button class="btn grow" data-a="up">${esc(T("Subir"))}</button></div>
+      <div class="row"><button class="btn grow" data-a="down">${esc(T("Bajar"))}</button><button class="btn grow" data-a="bottom">${esc(T("Al final"))}</button></div>
+      <button class="btn" data-a="rename">${esc(T("Cambiar nombre"))}</button>
+      ${nx ? `<button class="btn" data-a="nexus">${esc(T("Ver en Nexus"))}</button>` : ""}
+      <button class="btn danger" data-a="remove">${esc(T("Quitar mod"))}</button>
+      <button class="btn ghost" data-close>${esc(T("Cerrar"))}</button></div>`,
+    box => box.querySelectorAll("[data-a]").forEach(b => b.onclick = () => {
+      const a = b.dataset.a;
+      if (a === "nexus"){ closeModal(); return openDetail(m.source.mod_id); }
+      if (a === "rename") return renameModal(m);
+      if (a === "remove") return confirmModal(T("¿Quitar «{name}»?", {name: m.name}), T("Se borra de la consola. Saldrá del juego cuando pulses Aplicar."), T("Quitar mod"), () => modAct(m.id, "remove"));
+      closeModal(); modAct(m.id, a);
+    }));
+}
+function renameModal(m){
+  modal(`<h4>${esc(T("Cambiar nombre"))}</h4><input type="text" id="nn" value="${esc(m.name)}" maxlength="200">
+    <div class="acts"><button class="btn primary" id="ok">${esc(T("Guardar nombre"))}</button><button class="btn ghost" data-close>${esc(T("Cancelar"))}</button></div>`,
+    box => { $("#ok", box).onclick = () => { const v = $("#nn", box).value.trim(); closeModal(); if (v) modAct(m.id, "rename", v); }; });
+}
+async function checkUpdates(){
+  const b = $("#chk"); b.disabled = true; b.innerHTML = `<span class="spin"></span> ${esc(T("Comprobando…"))}`;
+  try {
+    const d = await api(`/api/game/${S.game}/updates`);
+    S.updates = d.updates;
+    const n = d.updates.length;
+    toast(n ? (n > 1 ? T("{n} mods tienen actualización", {n}) : T("1 mod tiene actualización")) : T("Todo al día (según el último mes de Nexus)"));
+  } catch (e) { fail(e); }
+  drawMine();
+}
+async function doApply(){
+  try { const j = await api(`/api/game/${S.game}/apply`, {}); S.jobStates[j.id] = j.state; toast(T("Aplicando en la consola…")); pollJobs(true); }
+  catch (e) { fail(e); }
+}
+
+// --------------------------------------------------------------------------- descargas
+function renderJobs(){
+  const v = $("#view");
+  const jobs = S.jobs;
+  if (!jobs.length){ v.innerHTML = `<div class="empty"><b>${esc(T("No hay descargas"))}</b>${esc(T("Lo que envíes a la Konkr aparecerá aquí con su progreso."))}</div>`; return; }
+  v.innerHTML = jobs.map(j => {
+    const active = ACTIVE.includes(j.state);
+    const cls = j.state === "needs_choice" ? "needs" : j.state === "error" ? "err" : j.state === "done" ? "done" : "";
+    let body = "";
+    if (j.state === "needs_choice" && j.choice){
+      body = `<p class="small" style="margin:0 0 6px">${esc(j.choice.fomod ?
+        T("Este mod trae un instalador con opciones (FOMOD). Marca la carpeta principal (suele llamarse Core o empezar por 00) y la opción que quieras.") :
+        T("No reconozco la estructura. Marca la carpeta que contiene lo que va dentro de Data (meshes, textures, archivos .esp…)."))}</p>
+        <ul class="cands">${j.choice.candidates.map(c => `<li><label><input type="checkbox" value="${esc(c.path)}">
+          <span><span class="p">${esc(c.path || T("(raíz del archivo)"))}</span><br><span class="k">${esc(c.peek.join(", "))}</span></span></label></li>`).join("")}</ul>
+        <div class="radios"><label><input type="radio" name="k${j.id}" value="data" checked> ${esc(T("Va dentro de Data (lo normal)"))}</label>
+          <label><input type="radio" name="k${j.id}" value="root"> ${esc(T("Va en la carpeta raíz del juego"))}</label></div>
+        <div class="row"><button class="btn primary grow" data-choose="${j.id}">${esc(T("Instalar lo marcado"))}</button><button class="btn ghost" data-cancel="${j.id}">${esc(T("Cancelar"))}</button></div>`;
+    } else if (active){
+      const pct = Math.round(j.progress * 100);
+      body = `<div class="bar ${j.state === "running" && !j.progress ? "indet" : ""}"><i style="width:${pct}%"></i></div>
+        <div class="row" style="margin-top:10px"><span class="grow small muted">${j.state === "running" && j.progress ? pct + " %" : ""}</span><button class="btn small ghost" data-cancel="${j.id}">${esc(T("Cancelar"))}</button></div>`;
+    }
+    const st = j.state === "error" ? j.error : j.state === "queued" ? T("En cola") : j.state === "cancelled" ? T("Cancelada") : j.text;
+    return `<article class="job ${cls}"><div class="jt">${esc(j.title)}</div><div class="js">${esc(st)}</div>${body}</article>`;
+  }).join("") + (jobs.some(j => !ACTIVE.includes(j.state)) ? `<button class="btn ghost more" id="clear">${esc(T("Borrar las terminadas"))}</button>` : "");
+  v.querySelectorAll("[data-cancel]").forEach(b => b.onclick = async () => { try { await api(`/api/jobs/${b.dataset.cancel}/cancel`, {}); pollJobs(true); } catch (e) { fail(e); } });
+  v.querySelectorAll("[data-choose]").forEach(b => b.onclick = async () => {
+    const card = b.closest(".job");
+    const roots = [...card.querySelectorAll(".cands input:checked")].map(i => i.value);
+    const kind = card.querySelector(`input[name="k${b.dataset.choose}"]:checked`).value;
+    if (!roots.length) return toast(T("Marca al menos una carpeta."), true);
+    try { await api(`/api/jobs/${b.dataset.choose}/choice`, {roots, kind}); pollJobs(true); } catch (e) { fail(e); }
+  });
+  $("#clear") && ($("#clear").onclick = async () => { await api("/api/jobs/clear", {}).catch(fail); pollJobs(true); });
+}
+
+let pollTimer = null;
+async function pollJobs(){
+  clearTimeout(pollTimer);
+  try {
+    const d = await api("/api/jobs");
+    const before = S.jobStates;
+    S.jobs = d.jobs; S.jobStates = Object.assign({}, before, Object.fromEntries(d.jobs.map(j => [j.id, j.state])));
+    let changedGame = false;
+    for (const j of d.jobs){
+      const prev = before[j.id];
+      if (prev && prev !== j.state){
+        if (j.state === "done"){ toast(j.kind === "apply" ? T("Mods aplicados al juego") : T("Instalado: {name}", {name: j.title})); changedGame = true; }
+        if (j.state === "error") toast(j.error, true);
+        if (j.state === "needs_choice" && S.tab !== "jobs") toast(T("Una descarga necesita que elijas qué instalar"));
+      }
+    }
+    const active = d.jobs.filter(j => ACTIVE.includes(j.state)).length;
+    const bd = $("#jobbadge"); if (bd){ bd.hidden = !active; bd.textContent = active; }
+    if (changedGame){
+      S.gs = null; refreshOverview();
+      if (S.tab === "mine") renderMine();
+      if (S.detail) refreshDetailInstalled();
+    }
+    if (S.tab === "jobs" && !document.querySelector(".job.needs input:checked")) renderJobs();
+    pollTimer = setTimeout(pollJobs, active ? 1200 : 6000);
+  } catch { pollTimer = setTimeout(pollJobs, 6000); }
+}
+async function refreshDetailInstalled(){
+  try {
+    const d = await api(`/api/nexus/mod?game=${S.game}&id=${S.detail.d.mod_id}`);
+    if (S.detail){ S.detail.d = d; drawDetail(); }
+  } catch {}
+}
+
+// --------------------------------------------------------------------------- ajustes
+async function renderSettings(){
+  const v = $("#view");
+  if (!S.gs || S.gs.key !== S.game) await loadGame();
+  if (S.tab !== "settings") return;
+  const o = S.overview || {};
+  const g = S.gs || {};
+  const se = g.se || {};
+  const langs = o.languages || {es: "Español"};
+  v.innerHTML = `
+    <div class="card"><h3>${esc(T("Consola"))}</h3><p>${esc(T("{host} con Konkr Mod Manager {version}.", {host: o.host || "?", version: o.version || ""}))}</p></div>
+    <div class="card"><h3>${esc(T("Idioma"))}</h3><p>${esc(T("Se usa en la consola y en esta app."))}</p>
+      <select id="lang" class="sel" aria-label="${esc(T("Idioma"))}">
+        <option value="auto" ${o.language_pref === "auto" ? "selected" : ""}>${esc(T("Automático (el del sistema)"))}</option>
+        ${Object.entries(langs).map(([k, n]) => `<option value="${esc(k)}" ${o.language_pref === k ? "selected" : ""}>${esc(n)}</option>`).join("")}
+      </select></div>
+    <div class="card"><h3>${esc(T("Cuenta de Nexus"))}</h3>
+      <p id="acc">${o.nexus_key ? (o.account ? accText(o.account) : esc(T("Clave guardada en la consola."))) : esc(T("Falta la clave de API. Pégala aquí abajo (la sacas en nexusmods.com → tu perfil → Ajustes → API)."))}</p>
+      <input id="nkey" class="sel" type="password" autocomplete="off" placeholder="${esc(T("Clave de API de Nexus"))}" aria-label="${esc(T("Clave de API de Nexus"))}" style="width:100%;margin:6px 0">
+      <button class="btn small primary" id="savekey">${esc(T("Guardar clave"))}</button>
+      ${o.nexus_key ? `<button class="btn small" id="chkacc">${esc(T("Comprobar cuenta"))}</button>` : ""}</div>
+    <div class="card"><h3>${esc(T("{se} en {game}", {se: se.name || "Script extender", game: SHORT[S.game]}))}</h3>
+      <p>${esc(!g.found ? T("El juego no está en la consola.") : !se.installed ? T("No está instalado. Búscalo en Explorar o descárgalo de su web, y aplica.") :
+        se.active ? T("Activo: Steam lo arranca al darle a Jugar.") : T("Instalado, pero Steam aún arranca el launcher normal."))}</p>
+      ${g.found && se.installed && !se.active ? `<button class="btn small primary" data-se="enable">${esc(T("Arrancar con {se}", {se: se.name}))}</button>` : ""}
+      ${g.found && se.can_restore ? `<button class="btn small" data-se="restore">${esc(T("Restaurar launcher original"))}</button>` : ""}</div>
+    <div class="card"><div class="row"><div class="grow"><h3>${esc(T("Mostrar mods para adultos"))}</h3><p style="margin:0">${esc(T("En Explorar y en las búsquedas."))}</p></div>
+      <label class="switch"><input type="checkbox" id="adult" ${o.show_adult ? "checked" : ""} aria-label="${esc(T("Mostrar mods para adultos"))}"></label></div></div>
+    <div class="card"><h3>${esc(T("Este móvil"))}</h3><p>${esc(T("Para añadirlo a la pantalla de inicio: menú del navegador → «Añadir a pantalla de inicio»."))}</p>
+      <button class="btn small danger" id="unpair">${esc(T("Desemparejar"))}</button></div>`;
+  $("#chkacc") && ($("#chkacc").onclick = async () => {
+    $("#acc").innerHTML = `<span class="spin"></span>`;
+    try { const a = await api("/api/account"); S.overview.account = a; $("#acc").innerHTML = accText(a); } catch (e) { $("#acc").textContent = e.message; }
+  });
+  $("#savekey").onclick = async () => {
+    const k = $("#nkey").value.trim();
+    if (!k) return;
+    $("#acc").innerHTML = `<span class="spin"></span>`;
+    try {
+      const r = await api("/api/settings", {api_key: k});
+      S.overview.nexus_key = r.nexus_key; S.overview.account = r.account; S.browse.key = "";
+      toast(T("Clave guardada")); renderSettings();
+    } catch (er) { $("#acc").textContent = er.message; }
+  };
+  $("#lang").onchange = async e => {
+    try { await api("/api/settings", {language: e.target.value}); await loadI18n(); await refreshOverview(); shell(); render(); }
+    catch (er) { fail(er); }
+  };
+  v.querySelectorAll("[data-se]").forEach(b => b.onclick = async () => {
+    try { S.gs = await api(`/api/game/${S.game}/se`, {action: b.dataset.se}); toast(b.dataset.se === "enable" ? T("{se} activado", {se: se.name}) : T("Launcher original restaurado")); renderSettings(); } catch (e) { fail(e); }
+  });
+  $("#adult").onchange = async e => { try { await api("/api/settings", {show_adult: e.target.checked}); S.overview.show_adult = e.target.checked; S.browse.key = ""; } catch (er) { fail(er); } };
+  $("#unpair").onclick = () => confirmModal(T("¿Desemparejar este móvil?"), T("Tendrás que volver a escribir el PIN."), T("Desemparejar"), () => { S.token = null; store.set("kmm.token", null); renderLogin(); });
+}
+const accText = a => a.ok === false ? esc(T("Sin clave.")) :
+  `${esc(T("Conectado como {name}.", {name: a.name}))} ${esc(a.premium ? T("Premium: las descargas son directas.") : T("Cuenta gratuita: Nexus solo permite descargar desde el botón de su web."))}`;
+
+// --------------------------------------------------------------------------- modales
+function modal(html, setup){
+  closeModal();
+  const m = document.createElement("div");
+  m.className = "modal"; m.id = "modal";
+  m.innerHTML = `<div class="box" role="dialog" aria-modal="true">${html}</div>`;
+  m.onclick = e => { if (e.target === m || e.target.closest("[data-close]")) closeModal(); };
+  document.body.appendChild(m);
+  setup && setup(m);
+}
+function closeModal(){ $("#modal")?.remove(); }
+function confirmModal(title, text, okLabel, onOk){
+  modal(`<h4>${esc(title)}</h4><p>${esc(text)}</p><div class="acts"><button class="btn primary" id="cok">${esc(okLabel)}</button><button class="btn ghost" data-close>${esc(T("Cancelar"))}</button></div>`,
+    box => $("#cok", box).onclick = () => { closeModal(); onOk(); });
+}
+
+// --------------------------------------------------------------------------- arranque
+async function refreshOverview(){
+  try { S.overview = await api("/api/overview"); markGames(); const c = $(".conn"); if (c) c.innerHTML = connHtml(); } catch {}
+}
+async function boot(){
+  shell();
+  await refreshOverview();
+  if (!S.token) return;
+  render();
+  pollJobs();
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden && S.token){ refreshOverview(); pollJobs(); if (S.tab === "mine"){ S.gs = null; renderMine(); } } });
+
+(async function start(){
+  await loadI18n();
+  const m = location.hash.match(/pin=(\d{6})/);
+  if (m){ history.replaceState(null, "", location.pathname); return doLogin(m[1]); }
+  if (!S.token) return renderLogin();
+  boot();
+})();
+</script>
+</body>
+</html>
