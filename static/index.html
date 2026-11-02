@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Konkr · Control remoto</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0e1116; color: #e8e8e8; font-family: system-ui, sans-serif; }
+  #bar { display: flex; gap: 8px; align-items: center; padding: 6px 10px; background: #171b22; font-size: 14px; }
+  #bar span { flex: 1; opacity: .8; }
+  button { background: #2b3340; color: inherit; border: 0; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+  button:hover { background: #3a4556; }
+  #screen { position: absolute; inset: 34px 0 0 0; }
+  #login { max-width: 360px; margin: 18vh auto 0; padding: 20px; background: #171b22; border-radius: 10px; }
+  #login h1 { font-size: 18px; margin: 0 0 12px; }
+  #login input { width: 100%; box-sizing: border-box; padding: 8px; margin: 6px 0 12px; border-radius: 6px; border: 1px solid #3a4556; background: #0e1116; color: inherit; font-size: 16px; }
+  #login button { width: 100%; padding: 10px; background: #2d6cdf; }
+  #msg { margin-top: 10px; color: #ff9a8f; min-height: 1.2em; font-size: 14px; }
+  .hide { display: none !important; }
+</style>
+</head>
+<body>
+<div id="login">
+  <h1>Konkr · Control remoto</h1>
+  <label for="pw">Contraseña (la muestra el plugin en la Konkr)</label>
+  <input id="pw" type="password" autocomplete="off" autofocus>
+  <button id="go">Conectar</button>
+  <div id="msg"></div>
+</div>
+<div id="bar" class="hide">
+  <span id="state">Conectando…</span>
+  <button id="scale">Ajustar a la ventana</button>
+  <button id="full">Pantalla completa</button>
+  <button id="bye">Desconectar</button>
+</div>
+<div id="screen" class="hide"></div>
+
+<script type="module">
+import RFB from "./novnc/core/rfb.js";
+
+const $ = (id) => document.getElementById(id);
+let rfb = null;
+let fit = true;
+
+function show(connected) {
+  $("login").classList.toggle("hide", connected);
+  $("bar").classList.toggle("hide", !connected);
+  $("screen").classList.toggle("hide", !connected);
+}
+
+function connect(password) {
+  $("msg").textContent = "";
+  $("go").disabled = true;
+  show(true);
+  $("state").textContent = "Conectando…";
+  const proto = location.protocol === "https:" ? "wss" : "ws";
+  const url = `${proto}://${location.host}/websockify`;
+  rfb = new RFB($("screen"), url, { credentials: { password } });
+  rfb.scaleViewport = fit;
+  rfb.resizeSession = false;
+  rfb.focusOnClick = true;
+  rfb.addEventListener("connect", () => {
+    $("state").textContent = "Conectado";
+    rfb.focus();
+  });
+  rfb.addEventListener("disconnect", (e) => {
+    show(false);
+    $("go").disabled = false;
+    $("msg").textContent = e.detail.clean ? "Desconectado." : "No se pudo conectar. ¿La contraseña es la actual y sigue activado el control remoto?";
+    rfb = null;
+  });
+  rfb.addEventListener("securityfailure", () => {
+    $("msg").textContent = "Contraseña incorrecta.";
+  });
+}
+
+$("go").addEventListener("click", () => connect($("pw").value));
+$("pw").addEventListener("keydown", (e) => { if (e.key === "Enter") connect($("pw").value); });
+$("bye").addEventListener("click", () => rfb && rfb.disconnect());
+$("scale").addEventListener("click", () => {
+  fit = !fit;
+  if (rfb) rfb.scaleViewport = fit;
+  $("scale").textContent = fit ? "Ajustar a la ventana" : "Tamaño real";
+});
+$("full").addEventListener("click", () => {
+  if (document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen().catch(() => {});
+});
+
+// Si se abre con #pw=CONTRASEÑA se rellena sola (el fragmento nunca viaja por la red)
+const m = location.hash.match(/pw=([^&]+)/);
+if (m) { $("pw").value = decodeURIComponent(m[1]); history.replaceState(null, "", location.pathname); }
+</script>
+</body>
+</html>

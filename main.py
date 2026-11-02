@@ -1,6 +1,7 @@
 """Konkr Toolbox: backend del plugin de Decky.
 
 Corre como root (flag "root" en plugin.json) porque activar o desactivar SSH lo necesita.
+El control remoto (ktb_remote.py) se ejecuta como el usuario normal, no como root.
 Konkr Tweaks, en cambio, se ejecuta siempre como el usuario normal (runuser), para que sus
 ajustes y los archivos de los juegos sigan siendo suyos.
 """
@@ -104,6 +105,19 @@ async def _maps(*args, timeout=60):
         return json.loads(line)
     except ValueError:
         decky.logger.error(f"maps {args}: rc={rc} out={out[-300:]} err={err[-500:]}")
+        return {"ok": False, "error": err[-200:] or out[-200:] or f"rc={rc}"}
+
+
+# ------------------------------------------------------------------ Control remoto
+
+async def _remote(*args, timeout=40):
+    script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "py_modules", "ktb_remote.py")
+    rc, out, err = await _run([PY, script, *args], timeout=timeout, as_user=True)
+    line = out.splitlines()[-1] if out else ""
+    try:
+        return json.loads(line)
+    except ValueError:
+        decky.logger.error(f"remote {args}: rc={rc} out={out[-300:]} err={err[-500:]}")
         return {"ok": False, "error": err[-200:] or out[-200:] or f"rc={rc}"}
 
 
@@ -230,6 +244,26 @@ class Plugin:
         st["ok"] = rc == 0
         return st
 
+    # ---------- Control remoto
+    async def remote_diag(self):
+        return await _remote("diag")
+
+    async def remote_status(self):
+        st = await _remote("status")
+        st["addresses"] = await _addresses()
+        return st
+
+    async def remote_start(self, minutes=30):
+        st = await _remote("start", str(int(minutes)), timeout=60)
+        decky.logger.info(f"remote start: ok={st.get('ok')} error={st.get('error')} {st.get('detail', '')}")
+        st["addresses"] = await _addresses()
+        return st
+
+    async def remote_stop(self):
+        st = await _remote("stop")
+        st["addresses"] = await _addresses()
+        return st
+
     # ---------- ciclo de vida
     async def _main(self):
         decky.logger.info(f"Konkr Toolbox listo (usuario {_user()}, home {_home()})")
@@ -239,7 +273,7 @@ class Plugin:
             decky.logger.info(f"plantillas de mando restauradas: {r['restored']}")
 
     async def _unload(self):
-        pass
+        await _remote("stop")   # que no quede la pantalla compartida si se recarga o se quita el plugin
 
     async def _uninstall(self):
-        pass
+        await _remote("stop")

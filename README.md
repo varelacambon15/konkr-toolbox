@@ -57,6 +57,18 @@ Modo Escritorio.
 - Muestra la dirección lista para FileZilla o WinSCP (`sftp://steamos@IP`).
 - Avisa si tu usuario no tiene contraseña (sin ella no se puede entrar por SSH).
 
+### Control remoto (navegador)
+- Comparte la pantalla del **Modo Juego** para verla y manejarla desde el navegador de otro equipo de tu red
+  (por ejemplo, para pegar texto o hacer cambios cómodamente desde el portátil).
+- Interruptor + tiempo de apagado automático (15 a 120 min). Cada activación crea una contraseña nueva de 8 caracteres.
+- Muestra la dirección (`http://IP:6080/`) de cada red y la contraseña.
+- Por dentro: `x11vnc` (solo escucha en 127.0.0.1) + `websockify` y noVNC incluidos en el plugin. Se ejecuta como tu
+  usuario, no como root. Ver `THIRD_PARTY.md`.
+- **Necesita `x11vnc` instalado en la consola.** El botón de diagnóstico dice qué falta.
+- Comprobado de punta a punta con una pantalla virtual (conexión, contraseña, ratón y teclado). **Sin probar todavía
+  en una Konkr real**: en Modo Juego solo se comparte la pantalla X de Steam, no el juego en pantalla completa.
+- Seguridad: HTTP sin cifrar, pensado para una red de casa. En un router compartido, apágalo al terminar.
+
 ## Instalación
 
 Decky ya viene instalado en SteamOS ARM para la Pocket FIT.
