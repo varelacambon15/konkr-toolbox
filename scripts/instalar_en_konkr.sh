@@ -3,6 +3,8 @@
 set -euo pipefail
 D="$(cd "$(dirname "$0")/.." && pwd)"
 Z=$(ls "$D"/release/konkr-toolbox-*.zip | sort -V | tail -1)
+# Konkr Tweaks (lo necesita la sección «Konkr Tweaks» del plugin). Solo tu carpeta de usuario, sin sudo.
+bash "$D/tweaks/install.sh"
 P="$HOME/homebrew/plugins"
 [ -d "$P" ] || { echo "No existe $P: ¿está Decky instalado?"; exit 1; }
 T=$(mktemp -d); trap 'rm -rf "$T"' EXIT

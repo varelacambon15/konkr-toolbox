@@ -1,0 +1,92 @@
+{
+ "appid": 22330,
+ "name": "The Elder Scrolls IV: Oblivion (GOTY)",
+ "notes": {
+  "es": "Edita Oblivion.ini (Mis documentos/My Games/Oblivion). Solo toca hierba, sombras de personajes y reflejos del agua.",
+  "en": "Edits Oblivion.ini (Documents/My Games/Oblivion). Only grass, character shadows and water reflections are changed."
+ },
+ "files": {
+  "ini": "{mygames}/Oblivion/Oblivion.ini"
+ },
+ "require": [
+  "ini"
+ ],
+ "resolution": {
+  "file": "ini",
+  "section": "Display",
+  "width": "iSize W",
+  "height": "iSize H",
+  "choices": [
+   "960x540",
+   "1280x720",
+   "1600x900",
+   "1920x1080"
+  ]
+ },
+ "presets": {
+  "lowest": {
+   "ini": {
+    "Grass": {
+     "fGrassEndDistance": "3000",
+     "fGrassStartFadeDistance": "2000",
+     "iMinGrassSize": "180"
+    },
+    "Display": {
+     "iActorShadowCountExt": "2",
+     "iActorShadowCountInt": "2",
+     "bDoCanopyShadowPass": "0"
+    },
+    "Water": {
+     "bUseWaterReflectionsMisc": "0",
+     "bUseWaterReflectionsStatics": "0",
+     "bUseWaterReflectionsTrees": "0",
+     "bUseWaterReflectionsActors": "0"
+    }
+   }
+  },
+  "balanced": {
+   "ini": {
+    "Grass": {
+     "fGrassEndDistance": "5000",
+     "fGrassStartFadeDistance": "4000",
+     "iMinGrassSize": "120"
+    },
+    "Display": {
+     "iActorShadowCountExt": "4",
+     "iActorShadowCountInt": "4",
+     "bDoCanopyShadowPass": "0"
+    },
+    "Water": {
+     "bUseWaterReflectionsMisc": "1",
+     "bUseWaterReflectionsStatics": "1",
+     "bUseWaterReflectionsTrees": "0",
+     "bUseWaterReflectionsActors": "0"
+    }
+   }
+  },
+  "quality": {
+   "ini": {
+    "Grass": {
+     "fGrassEndDistance": "8000",
+     "fGrassStartFadeDistance": "7000",
+     "iMinGrassSize": "80"
+    },
+    "Display": {
+     "iActorShadowCountExt": "10",
+     "iActorShadowCountInt": "10",
+     "bDoCanopyShadowPass": "1"
+    },
+    "Water": {
+     "bUseWaterReflectionsMisc": "1",
+     "bUseWaterReflectionsStatics": "1",
+     "bUseWaterReflectionsTrees": "1",
+     "bUseWaterReflectionsActors": "1"
+    }
+   }
+  }
+ },
+ "launch": {
+  "fex": "fast",
+  "ntsync": true
+ }
+}

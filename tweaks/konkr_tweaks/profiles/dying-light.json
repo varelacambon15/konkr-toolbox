@@ -1,0 +1,63 @@
+{
+ "appid": 239140,
+ "name": "Dying Light",
+ "notes": {
+  "es": "Edita video.scr. La distancia de visión es lo que más pesa (sobre todo en la CPU). Activa «Proteger el archivo» para que el juego no deshaga los cambios. Usa Proton, no la versión nativa de Linux.",
+  "en": "Edits video.scr. View distance is the most expensive setting (mostly CPU). Turn on “Protect the file” so the game doesn't undo the changes. Use Proton, not the native Linux build."
+ },
+ "files": {
+  "video": {
+   "path": "{documents}/DyingLight/out/settings/video.scr",
+   "type": "call",
+   "lock": true
+  }
+ },
+ "require": [
+  "video"
+ ],
+ "args": "-nologos",
+ "launch": {
+  "fex": "fast",
+  "ntsync": true
+ },
+ "resolution": {
+  "type": "call",
+  "file": "video",
+  "key": "Resolution",
+  "format": "{w},{h}",
+  "choices": [
+   "960x540",
+   "1280x720",
+   "1600x900",
+   "1920x1080"
+  ]
+ },
+ "presets": {
+  "lowest": {
+   "video": {
+    "TextureQuality": "\"Low\"",
+    "VisRange": "0.60, 0.60",
+    "ShadowMapSize": "512",
+    "SpotShadowMapSize": "512",
+    "GrassQuality": "0",
+    "AmbientOcclusion": "0",
+    "NvidiaEffects": "0,0,0",
+    "MotionBlur": "0",
+    "AntiAliasing": "0"
+   }
+  },
+  "balanced": {
+   "video": {
+    "TextureQuality": "\"Medium\"",
+    "VisRange": "1.00, 1.00",
+    "ShadowMapSize": "1024",
+    "SpotShadowMapSize": "1024",
+    "GrassQuality": "0",
+    "AmbientOcclusion": "0",
+    "NvidiaEffects": "0,0,0",
+    "MotionBlur": "0",
+    "AntiAliasing": "1"
+   }
+  }
+ }
+}

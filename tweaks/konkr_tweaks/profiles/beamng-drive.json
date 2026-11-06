@@ -1,0 +1,58 @@
+{
+ "appid": 284160,
+ "name": "BeamNG.drive",
+ "experimental": true,
+ "notes": {
+  "es": "Desactiva los efectos de posprocesado más caros (solo claves que ya existen en game-settings.ini) y, en modo Batería, limita los fps desde el propio juego. Arranca con Vulkan (-gfx vk). Es muy exigente con la CPU y la memoria: dentro del juego usa poco tráfico, «vehículos simplificados» y colisiones simplificadas.",
+  "en": "Turns off the most expensive post-processing effects (only keys already present in game-settings.ini) and, in Battery mode, caps fps in-game. Starts with Vulkan (-gfx vk). Very CPU- and memory-hungry: in-game, use little traffic, “simplified vehicles” and simplified collisions."
+ },
+ "files": {
+  "settings": {
+   "path": [
+    "{appdata_local}/BeamNG/BeamNG.drive/current/settings/game-settings.ini",
+    "{appdata_local}/BeamNG.drive/*/settings/game-settings.ini",
+    "{home}/.local/share/BeamNG/BeamNG.drive/current/settings/game-settings.ini"
+   ],
+   "type": "kv",
+   "only_existing": true
+  }
+ },
+ "require": [
+  "settings"
+ ],
+ "args": "-gfx vk",
+ "launch": {
+  "fex": "fast",
+  "ntsync": true
+ },
+ "presets": {
+  "lowest": {
+   "settings": {
+    "PostFXSSAOGeneralEnabled": "false",
+    "PostFXDOFGeneralEnabled": "false",
+    "PostFXMotionBlurEnabled": "false",
+    "PostFXScreenSpaceShadowsEnabled": "false",
+    "fpsLimitBackgroundEnabled": "true"
+   }
+  },
+  "balanced": {
+   "settings": {
+    "PostFXSSAOGeneralEnabled": "false",
+    "PostFXDOFGeneralEnabled": "false",
+    "PostFXMotionBlurEnabled": "false",
+    "PostFXScreenSpaceShadowsEnabled": "false",
+    "fpsLimitBackgroundEnabled": "true"
+   }
+  }
+ },
+ "fps_limit": {
+  "file": "settings",
+  "on": {
+   "fpsLimitEnabled": "true",
+   "fpsLimit": "{fps}"
+  },
+  "off": {
+   "fpsLimitEnabled": "false"
+  }
+ }
+}

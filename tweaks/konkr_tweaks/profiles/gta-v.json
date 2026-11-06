@@ -1,0 +1,106 @@
+{
+ "appid": 271590,
+ "name": "Grand Theft Auto V (Legacy)",
+ "notes": {
+  "es": "Edita settings.xml y añade -ignoreDifferentVideoCard a commandline.txt (para que no reinicie la configuración al detectar la GPU). El modo historia funciona en Linux; GTA Online no (BattlEye). Si usas GTA V Enhanced, este perfil no le sirve.",
+  "en": "Edits settings.xml and adds -ignoreDifferentVideoCard to commandline.txt (so settings aren't reset when the GPU is detected). Story mode works on Linux; GTA Online doesn't (BattlEye). Not valid for GTA V Enhanced."
+ },
+ "files": {
+  "settings": {
+   "path": "{documents}/Rockstar Games/GTA V/settings.xml",
+   "type": "xml"
+  },
+  "cmdline": {
+   "path": "{game}/commandline.txt",
+   "type": "lines",
+   "create": true
+  }
+ },
+ "require": [
+  "settings"
+ ],
+ "launch": {
+  "fex": "fast",
+  "ntsync": true
+ },
+ "resolution": {
+  "type": "xml",
+  "file": "settings",
+  "width": "video/ScreenWidth",
+  "height": "video/ScreenHeight",
+  "choices": [
+   "960x540",
+   "1280x720",
+   "1600x900",
+   "1920x1080"
+  ]
+ },
+ "presets": {
+  "lowest": {
+   "settings": {
+    "graphics/TextureQuality": "0",
+    "graphics/ShaderQuality": "0",
+    "graphics/ShadowQuality": "0",
+    "graphics/ReflectionQuality": "0",
+    "graphics/ReflectionMSAA": "0",
+    "graphics/WaterQuality": "0",
+    "graphics/ParticleQuality": "0",
+    "graphics/GrassQuality": "0",
+    "graphics/PostFX": "0",
+    "graphics/AnisotropicFiltering": "0",
+    "graphics/SSAO": "0",
+    "graphics/Tessellation": "0",
+    "graphics/MSAA": "0",
+    "graphics/FXAA_Enabled": "true",
+    "graphics/TXAA_Enabled": "false",
+    "graphics/CityDensity": "0.000000",
+    "graphics/PedVarietyMultiplier": "0.000000",
+    "graphics/VehicleVarietyMultiplier": "0.000000",
+    "graphics/LodScale": "0.000000",
+    "graphics/MaxLodScale": "0.000000",
+    "graphics/HdStreamingInFlight": "false",
+    "graphics/Shadow_LongShadows": "false",
+    "graphics/UltraShadows_Enabled": "false",
+    "graphics/Shadow_SoftShadows": "0",
+    "graphics/MotionBlurStrength": "0.000000",
+    "graphics/DoF": "false"
+   },
+   "cmdline": {
+    "-ignoreDifferentVideoCard": true
+   }
+  },
+  "balanced": {
+   "settings": {
+    "graphics/TextureQuality": "1",
+    "graphics/ShaderQuality": "1",
+    "graphics/ShadowQuality": "1",
+    "graphics/ReflectionQuality": "1",
+    "graphics/ReflectionMSAA": "0",
+    "graphics/WaterQuality": "0",
+    "graphics/ParticleQuality": "1",
+    "graphics/GrassQuality": "1",
+    "graphics/PostFX": "1",
+    "graphics/AnisotropicFiltering": "4",
+    "graphics/SSAO": "0",
+    "graphics/Tessellation": "0",
+    "graphics/MSAA": "0",
+    "graphics/FXAA_Enabled": "true",
+    "graphics/TXAA_Enabled": "false",
+    "graphics/CityDensity": "0.500000",
+    "graphics/PedVarietyMultiplier": "0.500000",
+    "graphics/VehicleVarietyMultiplier": "0.500000",
+    "graphics/LodScale": "0.500000",
+    "graphics/MaxLodScale": "0.000000",
+    "graphics/HdStreamingInFlight": "false",
+    "graphics/Shadow_LongShadows": "false",
+    "graphics/UltraShadows_Enabled": "false",
+    "graphics/Shadow_SoftShadows": "0",
+    "graphics/MotionBlurStrength": "0.000000",
+    "graphics/DoF": "false"
+   },
+   "cmdline": {
+    "-ignoreDifferentVideoCard": true
+   }
+  }
+ }
+}

@@ -1,0 +1,89 @@
+{
+ "appid": 311210,
+ "name": "Call of Duty: Black Ops III",
+ "notes": {
+  "es": "Edita players/config.ini (solo claves que ya existen; abre el juego una vez). Ojo: en este juego algunos valores van al revés (más alto = menos calidad). Activa «Proteger el archivo» para que el menú del juego no lo deshaga.",
+  "en": "Edits players/config.ini (only keys that already exist; launch the game once). Note: some values are reversed (higher = lower quality). Turn on “Protect the file” so the in-game menu doesn't undo it."
+ },
+ "files": {
+  "config": {
+   "path": "{game}/players/config.ini",
+   "type": "kv",
+   "only_existing": true,
+   "quote": true,
+   "lock": true
+  }
+ },
+ "require": [
+  "config"
+ ],
+ "launch": {
+  "fex": "fast",
+  "ntsync": true
+ },
+ "resolution": {
+  "type": "kv",
+  "file": "config",
+  "key": "WindowSize",
+  "format": "{w}x{h}",
+  "choices": [
+   "960x540",
+   "1280x720",
+   "1600x900",
+   "1920x1080"
+  ]
+ },
+ "presets": {
+  "lowest": {
+   "config": {
+    "ResolutionPercent": "80",
+    "TextureQuality": "3",
+    "MeshQuality": "2",
+    "TextureFilter": "0",
+    "SpotShadowTextureSize": "128",
+    "OmniShadowTextureSize": "128",
+    "DisableDynamicLightShadows": "1",
+    "DisableDynamicSunShadows": "1",
+    "ShadowFiltering": "0",
+    "ActorShadows": "0",
+    "SSAOTechnique": "Disabled",
+    "VolumetricLightingEnabled": "0",
+    "AATechnique": "None",
+    "MotionBlur": "Off",
+    "SubsurfaceScattering": "0",
+    "VideoMemory": "0.75",
+    "Vsync": "0"
+   }
+  },
+  "balanced": {
+   "config": {
+    "ResolutionPercent": "100",
+    "TextureQuality": "1",
+    "MeshQuality": "1",
+    "TextureFilter": "1",
+    "SpotShadowTextureSize": "512",
+    "OmniShadowTextureSize": "256",
+    "DisableDynamicLightShadows": "1",
+    "DisableDynamicSunShadows": "0",
+    "ShadowFiltering": "1",
+    "ActorShadows": "0",
+    "SSAOTechnique": "Disabled",
+    "VolumetricLightingEnabled": "0",
+    "AATechnique": "FXAA",
+    "MotionBlur": "Off",
+    "SubsurfaceScattering": "1",
+    "VideoMemory": "1",
+    "Vsync": "0"
+   }
+  }
+ },
+ "fps_limit": {
+  "file": "config",
+  "on": {
+   "MaxFPS": "{fps}"
+  },
+  "off": {
+   "MaxFPS": "0"
+  }
+ }
+}

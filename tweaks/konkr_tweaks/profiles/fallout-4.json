@@ -1,0 +1,143 @@
+{
+ "appid": 377160,
+ "name": "Fallout 4",
+ "notes": {
+  "es": "Edita Fallout4Prefs.ini. No cambia la sincronización vertical: en Fallout 4 la física depende de los fps. Usa el límite de fps de Steam (30 o 40).",
+  "en": "Edits Fallout4Prefs.ini. V-sync is left alone: Fallout 4 physics depend on the frame rate. Use Steam's frame limit (30 or 40)."
+ },
+ "files": {
+  "prefs": "{mygames}/Fallout4/Fallout4Prefs.ini"
+ },
+ "require": [
+  "prefs"
+ ],
+ "resolution": {
+  "file": "prefs",
+  "section": "Display",
+  "width": "iSize W",
+  "height": "iSize H",
+  "choices": [
+   "960x540",
+   "1280x720",
+   "1600x900",
+   "1920x1080"
+  ]
+ },
+ "presets": {
+  "lowest": {
+   "prefs": {
+    "Display": {
+     "fShadowDistance": "2000",
+     "fDirShadowDistance": "2000",
+     "iShadowMapResolution": "1024",
+     "iDirShadowSplits": "1",
+     "bVolumetricLightingEnable": "0",
+     "iVolumetricLightingQuality": "0",
+     "bSAOEnable": "0",
+     "bScreenSpaceReflections": "0",
+     "iTexMipMapSkip": "1",
+     "iMaxAnisotropy": "2",
+     "sAntiAliasing": "FXAA",
+     "iMaxFocusShadows": "1",
+     "iMaxFocusShadowsDialogue": "1"
+    },
+    "ImageSpace": {
+     "bDoDepthOfField": "0",
+     "bLensFlare": "0",
+     "bScreenSpaceBokeh": "0",
+     "bMBEnable": "0"
+    },
+    "Grass": {
+     "fGrassStartFadeDistance": "2000"
+    },
+    "LOD": {
+     "fLODFadeOutMultObjects": "6",
+     "fLODFadeOutMultItems": "2",
+     "fLODFadeOutMultActors": "4"
+    },
+    "Decals": {
+     "uMaxDecals": "40",
+     "uMaxSkinDecals": "10"
+    }
+   }
+  },
+  "balanced": {
+   "prefs": {
+    "Display": {
+     "fShadowDistance": "3000",
+     "fDirShadowDistance": "3000",
+     "iShadowMapResolution": "2048",
+     "iDirShadowSplits": "2",
+     "bVolumetricLightingEnable": "0",
+     "iVolumetricLightingQuality": "0",
+     "bSAOEnable": "0",
+     "bScreenSpaceReflections": "1",
+     "iTexMipMapSkip": "0",
+     "iMaxAnisotropy": "4",
+     "sAntiAliasing": "TAA",
+     "iMaxFocusShadows": "2",
+     "iMaxFocusShadowsDialogue": "2"
+    },
+    "ImageSpace": {
+     "bDoDepthOfField": "1",
+     "bLensFlare": "1",
+     "bScreenSpaceBokeh": "0",
+     "bMBEnable": "0"
+    },
+    "Grass": {
+     "fGrassStartFadeDistance": "3500"
+    },
+    "LOD": {
+     "fLODFadeOutMultObjects": "10",
+     "fLODFadeOutMultItems": "3",
+     "fLODFadeOutMultActors": "6"
+    },
+    "Decals": {
+     "uMaxDecals": "100",
+     "uMaxSkinDecals": "20"
+    }
+   }
+  },
+  "quality": {
+   "prefs": {
+    "Display": {
+     "fShadowDistance": "6000",
+     "fDirShadowDistance": "6000",
+     "iShadowMapResolution": "2048",
+     "iDirShadowSplits": "3",
+     "bVolumetricLightingEnable": "1",
+     "iVolumetricLightingQuality": "1",
+     "bSAOEnable": "1",
+     "bScreenSpaceReflections": "1",
+     "iTexMipMapSkip": "0",
+     "iMaxAnisotropy": "8",
+     "sAntiAliasing": "TAA",
+     "iMaxFocusShadows": "4",
+     "iMaxFocusShadowsDialogue": "4"
+    },
+    "ImageSpace": {
+     "bDoDepthOfField": "1",
+     "bLensFlare": "1",
+     "bScreenSpaceBokeh": "1",
+     "bMBEnable": "0"
+    },
+    "Grass": {
+     "fGrassStartFadeDistance": "6000"
+    },
+    "LOD": {
+     "fLODFadeOutMultObjects": "15",
+     "fLODFadeOutMultItems": "6",
+     "fLODFadeOutMultActors": "10"
+    },
+    "Decals": {
+     "uMaxDecals": "200",
+     "uMaxSkinDecals": "35"
+    }
+   }
+  }
+ },
+ "launch": {
+  "fex": "fast",
+  "ntsync": true
+ }
+}

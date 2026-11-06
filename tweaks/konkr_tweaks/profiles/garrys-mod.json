@@ -1,0 +1,93 @@
+{
+ "appid": 4000,
+ "name": "Garry's Mod",
+ "notes": {
+  "es": "Crea o edita garrysmod/cfg/autoexec.cfg con renderizado multinúcleo y efectos ligeros. Si tienes muchos addons, cambia a la rama beta «x86-64» (Propiedades → Betas): usa más de 4 GB de RAM y va más fluido.",
+  "en": "Creates or edits garrysmod/cfg/autoexec.cfg with multicore rendering and light effects. With many addons, switch to the “x86-64” beta branch (Properties → Betas): it can use more than 4 GB of RAM and runs smoother."
+ },
+ "files": {
+  "autoexec": {
+   "path": "{game}/garrysmod/cfg/autoexec.cfg",
+   "type": "cfg",
+   "create": true
+  }
+ },
+ "require": [],
+ "args": "-novid -nojoy -softparticlesdefaultoff",
+ "launch": {
+  "fex": "fast",
+  "ntsync": true
+ },
+ "resolution": {
+  "type": "args",
+  "format": "-w {w} -h {h}",
+  "choices": [
+   "960x540",
+   "1280x720",
+   "1600x900",
+   "1920x1080"
+  ]
+ },
+ "presets": {
+  "lowest": {
+   "autoexec": {
+    "gmod_mcore_test": "1",
+    "mat_queue_mode": "-1",
+    "cl_threaded_bone_setup": "1",
+    "r_shadows": "0",
+    "mat_picmip": "2",
+    "mat_antialias": "0",
+    "mat_forceaniso": "1",
+    "r_waterforceexpensive": "0",
+    "r_waterforcereflectentities": "0",
+    "mat_disable_bloom": "1",
+    "mat_motion_blur_enabled": "0",
+    "r_drawdetailprops": "0",
+    "mat_reducefillrate": "1"
+   }
+  },
+  "balanced": {
+   "autoexec": {
+    "gmod_mcore_test": "1",
+    "mat_queue_mode": "-1",
+    "cl_threaded_bone_setup": "1",
+    "r_shadows": "1",
+    "mat_picmip": "1",
+    "mat_antialias": "0",
+    "mat_forceaniso": "2",
+    "r_waterforceexpensive": "0",
+    "r_waterforcereflectentities": "0",
+    "mat_disable_bloom": "0",
+    "mat_motion_blur_enabled": "0",
+    "r_drawdetailprops": "1",
+    "mat_reducefillrate": "0"
+   }
+  },
+  "quality": {
+   "autoexec": {
+    "gmod_mcore_test": "1",
+    "mat_queue_mode": "-1",
+    "cl_threaded_bone_setup": "1",
+    "r_shadows": "1",
+    "mat_picmip": "0",
+    "mat_antialias": "2",
+    "mat_forceaniso": "4",
+    "r_waterforceexpensive": "1",
+    "r_waterforcereflectentities": "0",
+    "mat_disable_bloom": "0",
+    "mat_motion_blur_enabled": "0",
+    "r_drawdetailprops": "1",
+    "mat_reducefillrate": "0"
+   }
+  }
+ },
+ "fps_limit": {
+  "file": "autoexec",
+  "on": {
+   "fps_max": "{fps}"
+  },
+  "off": {
+   "fps_max": "300"
+  }
+ }
+}

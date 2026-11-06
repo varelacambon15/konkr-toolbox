@@ -11,3 +11,6 @@ El control remoto (sección "Control remoto") incluye estas piezas sin modificar
 
 ## Konkr Mod Manager (modmanager/)
 Código propio del autor (MIT). Incluye `qrcodegen.py` de Project Nayuki (MIT).
+
+## Konkr Tweaks (tweaks/)
+Código propio del autor (MIT), incluido aquí hasta tener su propio repositorio.

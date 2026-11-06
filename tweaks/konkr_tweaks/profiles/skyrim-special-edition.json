@@ -1,0 +1,158 @@
+{
+ "appid": 489830,
+ "name": "The Elder Scrolls V: Skyrim Special Edition",
+ "notes": {
+  "es": "Edita SkyrimPrefs.ini. Abre el juego una vez desde Steam para que se cree. Para jugar en la consola, combina «Equilibrado» con 1280x720 y el escalado FSR de Steam.",
+  "en": "Edits SkyrimPrefs.ini. Launch the game once from Steam so it gets created. On a handheld, pair “Balanced” with 1280x720 and Steam's FSR scaling."
+ },
+ "files": {
+  "prefs": "{mygames}/Skyrim Special Edition/SkyrimPrefs.ini"
+ },
+ "require": [
+  "prefs"
+ ],
+ "resolution": {
+  "file": "prefs",
+  "section": "Display",
+  "width": "iSize W",
+  "height": "iSize H",
+  "choices": [
+   "960x540",
+   "1280x720",
+   "1600x900",
+   "1920x1080"
+  ]
+ },
+ "presets": {
+  "lowest": {
+   "prefs": {
+    "Display": {
+     "fShadowDistance": "2000",
+     "iShadowMapResolution": "512",
+     "bTreesReceiveShadows": "0",
+     "bDrawLandShadows": "0",
+     "iMaxAnisotropy": "2",
+     "iMultiSample": "0",
+     "bUseTAA": "0",
+     "bFXAAEnabled": "1",
+     "bSAOEnable": "0",
+     "iTexMipMapSkip": "1",
+     "bEnableImprovedSnow": "0"
+    },
+    "Grass": {
+     "fGrassStartFadeDistance": "2000"
+    },
+    "LOD": {
+     "fLODFadeOutMultObjects": "6",
+     "fLODFadeOutMultItems": "2",
+     "fLODFadeOutMultActors": "4"
+    },
+    "Decals": {
+     "uMaxDecals": "40",
+     "uMaxSkinDecals": "10"
+    },
+    "Particles": {
+     "iMaxDesired": "500"
+    },
+    "Water": {
+     "bReflectLODObjects": "0",
+     "bReflectLODTrees": "0",
+     "bReflectLODLand": "0",
+     "iWaterReflectHeight": "256",
+     "iWaterReflectWidth": "256"
+    },
+    "ImageSpace": {
+     "bDoDepthOfField": "0"
+    }
+   }
+  },
+  "balanced": {
+   "prefs": {
+    "Display": {
+     "fShadowDistance": "3500",
+     "iShadowMapResolution": "1024",
+     "bTreesReceiveShadows": "0",
+     "bDrawLandShadows": "0",
+     "iMaxAnisotropy": "4",
+     "iMultiSample": "0",
+     "bUseTAA": "1",
+     "bFXAAEnabled": "0",
+     "bSAOEnable": "0",
+     "iTexMipMapSkip": "0",
+     "bEnableImprovedSnow": "1"
+    },
+    "Grass": {
+     "fGrassStartFadeDistance": "4000"
+    },
+    "LOD": {
+     "fLODFadeOutMultObjects": "10",
+     "fLODFadeOutMultItems": "3",
+     "fLODFadeOutMultActors": "6"
+    },
+    "Decals": {
+     "uMaxDecals": "100",
+     "uMaxSkinDecals": "25"
+    },
+    "Particles": {
+     "iMaxDesired": "750"
+    },
+    "Water": {
+     "bReflectLODObjects": "0",
+     "bReflectLODTrees": "0",
+     "bReflectLODLand": "1",
+     "iWaterReflectHeight": "512",
+     "iWaterReflectWidth": "512"
+    },
+    "ImageSpace": {
+     "bDoDepthOfField": "1"
+    }
+   }
+  },
+  "quality": {
+   "prefs": {
+    "Display": {
+     "fShadowDistance": "6000",
+     "iShadowMapResolution": "2048",
+     "bTreesReceiveShadows": "1",
+     "bDrawLandShadows": "1",
+     "iMaxAnisotropy": "8",
+     "iMultiSample": "0",
+     "bUseTAA": "1",
+     "bFXAAEnabled": "0",
+     "bSAOEnable": "1",
+     "iTexMipMapSkip": "0",
+     "bEnableImprovedSnow": "1"
+    },
+    "Grass": {
+     "fGrassStartFadeDistance": "7000"
+    },
+    "LOD": {
+     "fLODFadeOutMultObjects": "15",
+     "fLODFadeOutMultItems": "6",
+     "fLODFadeOutMultActors": "10"
+    },
+    "Decals": {
+     "uMaxDecals": "250",
+     "uMaxSkinDecals": "35"
+    },
+    "Particles": {
+     "iMaxDesired": "1500"
+    },
+    "Water": {
+     "bReflectLODObjects": "1",
+     "bReflectLODTrees": "1",
+     "bReflectLODLand": "1",
+     "iWaterReflectHeight": "512",
+     "iWaterReflectWidth": "512"
+    },
+    "ImageSpace": {
+     "bDoDepthOfField": "1"
+    }
+   }
+  }
+ },
+ "launch": {
+  "fex": "fast",
+  "ntsync": true
+ }
+}

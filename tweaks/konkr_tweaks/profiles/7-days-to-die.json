@@ -1,0 +1,87 @@
+{
+ "appid": 251570,
+ "name": "7 Days to Die",
+ "experimental": true,
+ "notes": {
+  "es": "Cambia las opciones gráficas guardadas en el registro de Wine (solo las que ya existen: abre el juego una vez antes) y arranca sin EasyAntiCheat, que no funciona en Linux. Desactiva también la «malla dinámica» en el menú: consume 600-800 MB. Los valores numéricos de algunas opciones no están documentados; si algo se ve raro, «Restaurar original».",
+  "en": "Changes the graphics options stored in the Wine registry (only those that already exist: launch the game once first) and starts without EasyAntiCheat, which doesn't work on Linux. Also turn off “Dynamic Mesh” in the menu: it uses 600-800 MB. Some numeric values are undocumented; if anything looks wrong, use “Restore original”."
+ },
+ "files": {
+  "reg": {
+   "path": "{pfx}/user.reg",
+   "type": "reg"
+  }
+ },
+ "require": [
+  "reg"
+ ],
+ "args": "-force-d3d11 -noeac -skipintro -SkipNewsScreen=true",
+ "launch": {
+  "fex": "fast",
+  "ntsync": true
+ },
+ "resolution": {
+  "type": "args",
+  "format": "-screen-width {w} -screen-height {h} -screen-fullscreen 1",
+  "choices": [
+   "960x540",
+   "1280x720",
+   "1600x900",
+   "1920x1080"
+  ]
+ },
+ "presets": {
+  "lowest": {
+   "reg": {
+    "Software\\The Fun Pimps\\7 Days To Die": {
+     "OptionsGfxTexQuality": 2,
+     "OptionsGfxShadowDistance": 0,
+     "OptionsGfxShadowQuality": 0,
+     "OptionsGfxReflectQuality": 0,
+     "OptionsGfxReflectShadows": 0,
+     "OptionsGfxSSReflections": 0,
+     "OptionsGfxSSAO": 0,
+     "OptionsGfxWaterQuality": 0,
+     "OptionsGfxGrassDistance": 0,
+     "OptionsGfxObjQuality": 0,
+     "OptionsGfxTerrainQuality": 0,
+     "OptionsGfxBloom": 0,
+     "OptionsGfxDOF": 0,
+     "OptionsGfxSunShafts": 0,
+     "OptionsGfxMotionBlurEnabled": 0,
+     "OptionsGfxMotionBlur": 0,
+     "OptionsGfxDynamicMode": 0,
+     "OptionsGfxVsync": 0,
+     "OptionsGfxOcclusion": 1,
+     "OptionsGfxStreamMipmaps": 1
+    }
+   }
+  },
+  "balanced": {
+   "reg": {
+    "Software\\The Fun Pimps\\7 Days To Die": {
+     "OptionsGfxTexQuality": 1,
+     "OptionsGfxShadowDistance": 1,
+     "OptionsGfxShadowQuality": 1,
+     "OptionsGfxReflectQuality": 0,
+     "OptionsGfxReflectShadows": 0,
+     "OptionsGfxSSReflections": 0,
+     "OptionsGfxSSAO": 0,
+     "OptionsGfxWaterQuality": 0,
+     "OptionsGfxGrassDistance": 1,
+     "OptionsGfxObjQuality": 1,
+     "OptionsGfxTerrainQuality": 1,
+     "OptionsGfxBloom": 0,
+     "OptionsGfxDOF": 0,
+     "OptionsGfxSunShafts": 0,
+     "OptionsGfxMotionBlurEnabled": 0,
+     "OptionsGfxMotionBlur": 0,
+     "OptionsGfxDynamicMode": 0,
+     "OptionsGfxVsync": 0,
+     "OptionsGfxOcclusion": 1,
+     "OptionsGfxStreamMipmaps": 1
+    }
+   }
+  }
+ }
+}
