@@ -58,7 +58,7 @@ export function TweaksSection() {
   const [busy, setBusy] = useState(false);
   const running = runningAppid();
 
-  const load = async (keep?: number | null) => {
+  const load = async (keep?: number | null, resetMode = true) => {
     const r = await ktGames();
     if (!r.ok) {
       setError(errorText(r.error));
@@ -73,7 +73,7 @@ export function TweaksSection() {
       (list[0]?.appid ?? null);
     setAppid(pick);
     const g = list.find((x) => x.appid === pick);
-    if (g) setMode(g.mode ?? "balanced");
+    if (g && resetMode) setMode(g.mode ?? "balanced");
   };
 
   useEffect(() => {
@@ -99,7 +99,9 @@ export function TweaksSection() {
           body: r.deferred || isRunning ? t.appliedNext : game.name,
         });
       }
-      await load(game.appid);
+      // Se conserva el modo elegido: si el juego está abierto o el cambio queda pendiente,
+      // el modo detectado todavía no cambió y no debe devolver el selector a «Equilibrado».
+      await load(game.appid, false);
     } finally {
       setBusy(false);
     }
